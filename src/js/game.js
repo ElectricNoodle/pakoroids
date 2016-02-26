@@ -6,24 +6,33 @@
   Game.prototype = {
       create: function () {
         this.game.physics.startSystem(Phaser.Physics.P2JS);
+        this.game.world.setBounds(-1000,-1000,2000,2000);
         this.bullets = this.game.add.group();
         for (var i = 0; i < 10; i++) {
-            var bullet = this.bullets.create(this.game.rnd.integerInRange(200, 1700), this.game.rnd.integerInRange(-200, 400), 'tinycar');
-            this.game.physics.p2.enable(bullet,false);
+            //var bullet = this.bullets.create(this.game.rnd.integerInRange(200, 1700), this.game.rnd.integerInRange(-200, 400), 'tinycar');
+            //this.game.physics.p2.enable(bullet,false);
         }
         this.cursors = this.game.input.keyboard.createCursorKeys();
-        this.ship = this.game.add.sprite(32, this.game.world.height - 150, 'car');
+        this.background = this.game.add.tileSprite(0, 0, 1920, 1920, 'background');
+        this.ship = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'andy');
         this.game.physics.p2.enable(this.ship);
+        this.game.camera.follow(this.ship);
       },
 
     update: function () {
-      this.bullets.forEachAlive(this.moveBullets,this);  //make this.bullets accelerate to ship
-
-      if (this.cursors.left.isDown) {this.ship.body.rotateLeft(100);}   //this.ship movement
-      else if (this.cursors.right.isDown){this.ship.body.rotateRight(100);}
-      else {this.ship.body.setZeroRotation();}
-      if (this.cursors.up.isDown){this.ship.body.thrust(400);}
-      else if (this.cursors.down.isDown){this.ship.body.reverse(400);}
+      //this.bullets.forEachAlive(this.moveBullets,this);  //make this.bullets accelerate to ship
+      this.background.tilePosition = this.game.camera.position;
+      if (this.cursors.left.isDown) {
+        this.ship.body.rotateLeft(100);
+      }   //this.ship movement
+      else if (this.cursors.right.isDown){
+        this.ship.body.rotateRight(100);}
+      else {
+        this.ship.body.setZeroRotation();}
+      if (this.cursors.up.isDown){
+        this.ship.body.thrust(400);}
+      else if (this.cursors.down.isDown){
+        this.ship.body.reverse(400);}
     },
 
     moveBullets: function (bullet) { 
