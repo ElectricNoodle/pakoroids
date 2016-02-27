@@ -19,6 +19,8 @@
       this.load.image('rickypaksmall', 'assets/images/pakora/small/ricky-pakora.png');
       this.load.image('craigsamlarge', 'assets/images/pakora/big/craig-samosa.png');
 
+      this.load.image('bullet','assets/images/splodge.png');
+
 
       this.load.image('background','assets/images/space.png');
 
