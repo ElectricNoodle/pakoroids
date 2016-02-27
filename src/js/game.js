@@ -9,19 +9,30 @@
         this.game.world.setBounds(-1000,-1000,2000,2000);
         this.bullets = this.game.add.group();
         for (var i = 0; i < 10; i++) {
-            //var bullet = this.bullets.create(this.game.rnd.integerInRange(200, 1700), this.game.rnd.integerInRange(-200, 400), 'tinycar');
-            //this.game.physics.p2.enable(bullet,false);
+            var bullet = this.bullets.create(this.game.rnd.integerInRange(-1000, 2000), this.game.rnd.integerInRange(-1000, 2000), 'robpaklarge');
+            this.game.physics.p2.enable(bullet,false);
+            console.log("adding bullet", i)
+        }
+        for (var i = 0; i < 10; i++) {
+            var bullet = this.bullets.create(this.game.rnd.integerInRange(-1000, 2000), this.game.rnd.integerInRange(-1000, 2000), 'robpakmedium');
+            this.game.physics.p2.enable(bullet,false);
+            console.log("adding bullet", i)
+        }
+        for (var i = 0; i < 10; i++) {
+            var bullet = this.bullets.create(this.game.rnd.integerInRange(-1000, 2000), this.game.rnd.integerInRange(-1000, 2000), 'robpaksmall');
+            this.game.physics.p2.enable(bullet,false);
+            console.log("adding bullet", i)
         }
         this.cursors = this.game.input.keyboard.createCursorKeys();
-        this.background = this.game.add.tileSprite(-1000, -1000, 2000, 2000, 'background');
+        //this.background = this.game.add.tileSprite(-1000, -1000, 2000, 2000, 'background');
         this.ship = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'andy');
         this.game.physics.p2.enable(this.ship);
         this.game.camera.follow(this.ship);
       },
 
     update: function () {
-      //this.bullets.forEachAlive(this.moveBullets,this);  //make this.bullets accelerate to ship
-      this.background.tilePosition = this.game.camera.position;
+      this.bullets.forEachAlive(this.moveBullets,this);  //make this.bullets accelerate to ship
+      //this.background.tilePosition = this.game.camera.position;
       if (this.cursors.left.isDown) {
         this.ship.body.rotateLeft(100);
       }   //this.ship movement
