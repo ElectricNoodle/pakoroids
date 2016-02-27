@@ -31,7 +31,7 @@
       },
 
     update: function () {
-      this.bullets.forEachAlive(this.moveBullets,this);  //make this.bullets accelerate to ship
+      //this.bullets.forEachAlive(this.moveBullets,this);  //make this.bullets accelerate to ship
       //this.background.tilePosition = this.game.camera.position;
       if (this.cursors.left.isDown) {
         this.ship.body.rotateLeft(100);
