@@ -7,6 +7,7 @@
       create: function () {
         this.game.physics.startSystem(Phaser.Physics.P2JS);
         this.game.world.setBounds(-1000,-1000,2000,2000);
+        this.background = this.game.add.tileSprite(-1000, -1000, 2000, 2000, 'background');
         this.robsLarge = this.game.add.group();
         this.rickysLarge = this.game.add.group();
         this.craigsLarge = this.game.add.group();
@@ -27,7 +28,6 @@
         }
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
-        //this.background = this.game.add.tileSprite(-1000, -1000, 2000, 2000, 'background');
         this.ship = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'andy');
         this.game.physics.p2.enable(this.ship);
         this.game.camera.follow(this.ship);
