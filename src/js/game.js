@@ -7,22 +7,25 @@
       create: function () {
         this.game.physics.startSystem(Phaser.Physics.P2JS);
         this.game.world.setBounds(-1000,-1000,2000,2000);
-        this.bullets = this.game.add.group();
+        this.robsLarge = this.game.add.group();
+        this.rickysLarge = this.game.add.group();
+        this.craigsLarge = this.game.add.group();
         for (var i = 0; i < 10; i++) {
-            var bullet = this.bullets.create(this.game.rnd.integerInRange(-1000, 2000), this.game.rnd.integerInRange(-1000, 2000), 'robpaklarge');
+            var bullet = this.robsLarge.create(this.game.rnd.integerInRange(-1000, 2000), this.game.rnd.integerInRange(-1000, 2000), 'robpaklarge');
             this.game.physics.p2.enable(bullet,false);
             console.log("adding bullet", i)
         }
         for (var i = 0; i < 10; i++) {
-            var bullet = this.bullets.create(this.game.rnd.integerInRange(-1000, 2000), this.game.rnd.integerInRange(-1000, 2000), 'robpakmedium');
+            var bullet = this.rickysLarge.create(this.game.rnd.integerInRange(-1000, 2000), this.game.rnd.integerInRange(-1000, 2000), 'rickypaklarge');
             this.game.physics.p2.enable(bullet,false);
             console.log("adding bullet", i)
         }
         for (var i = 0; i < 10; i++) {
-            var bullet = this.bullets.create(this.game.rnd.integerInRange(-1000, 2000), this.game.rnd.integerInRange(-1000, 2000), 'robpaksmall');
+            var bullet = this.craigsLarge.create(this.game.rnd.integerInRange(-1000, 2000), this.game.rnd.integerInRange(-1000, 2000), 'craigsamlarge');
             this.game.physics.p2.enable(bullet,false);
             console.log("adding bullet", i)
         }
+
         this.cursors = this.game.input.keyboard.createCursorKeys();
         //this.background = this.game.add.tileSprite(-1000, -1000, 2000, 2000, 'background');
         this.ship = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'andy');
@@ -31,7 +34,7 @@
       },
 
     update: function () {
-      //this.bullets.forEachAlive(this.moveBullets,this);  //make this.bullets accelerate to ship
+      //this.robsLarge.forEachAlive(this.moveBullets,this);  //make this.bullets accelerate to ship
       //this.background.tilePosition = this.game.camera.position;
       if (this.cursors.left.isDown) {
         this.ship.body.rotateLeft(100);

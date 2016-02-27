@@ -14,6 +14,11 @@
       this.load.image('robpaklarge', 'assets/images/pakora/big/rob-pakosha_360.png');
       this.load.image('robpakmedium', 'assets/images/pakora/medium/rob-pakosha_360.png');
       this.load.image('robpaksmall', 'assets/images/pakora/small/rob-pakosha_360.png');
+      this.load.image('rickypaklarge', 'assets/images/pakora/big/ricky-pakora.png');
+      this.load.image('rickypakmedium', 'assets/images/pakora/medium/ricky-pakora.png');
+      this.load.image('rickypaksmall', 'assets/images/pakora/small/ricky-pakora.png');
+      this.load.image('craigsamlarge', 'assets/images/pakora/big/craig-samosa.png');
+
 
       this.load.image('background','assets/images/space.png');
 
