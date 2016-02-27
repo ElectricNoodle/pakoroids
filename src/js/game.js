@@ -13,7 +13,7 @@
             //this.game.physics.p2.enable(bullet,false);
         }
         this.cursors = this.game.input.keyboard.createCursorKeys();
-        this.background = this.game.add.tileSprite(0, 0, 1920, 1920, 'background');
+        this.background = this.game.add.tileSprite(-1000, -1000, 2000, 2000, 'background');
         this.ship = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'andy');
         this.game.physics.p2.enable(this.ship);
         this.game.camera.follow(this.ship);
