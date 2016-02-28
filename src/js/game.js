@@ -67,8 +67,8 @@
         this.bullets.setAll('anchor.y', 0.1);
 
         this.bullets.children.forEach(function(child){
-          console.log(child)
           child.body.setCollisionGroup(that.bulletCollisionGroup)
+          child.body.collides(that.pakoraCollisionGroup)
         })
         this.bulletTime = 0;
 
@@ -142,8 +142,8 @@
               bullet.reset(this.ship.body.x-(Math.sin(this.ship.rotation)*(-40)), this.ship.body.y+(Math.sin(this.ship.rotation+1.581)*(-40)));
               bullet.lifespan = 2000;
               bullet.rotation = this.ship.rotation;
-              bullet.body.force.x = Math.cos(this.ship.rotation) * 4000;    // accelerateToObject 
-              bullet.body.force.y = Math.sin(this.ship.rotation) * 4000;
+              bullet.body.force.x = Math.cos(this.ship.rotation-1.581)*100000;
+              bullet.body.force.y = Math.sin(this.ship.rotation-1.581)*100000;
               //this.game.physics.arcade.velocityFromRotation(this.ship.rotation-1.581, 400, bullet.body.velocity);
               this.bulletTime = this.game.time.now + 50;
           }
