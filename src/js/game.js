@@ -73,10 +73,10 @@
 
           if (bullet)
           {
-              bullet.reset(this.ship.body.x, this.ship.body.y-50);
+              bullet.reset(this.ship.body.x-(Math.sin(this.ship.rotation)*(1)), this.ship.body.y+(Math.sin(this.ship.rotation+1.581)*(1)));
               bullet.lifespan = 2000;
               bullet.rotation = this.ship.rotation;
-              this.game.physics.arcade.velocityFromRotation(this.ship.rotation, 400, bullet.body.velocity);
+              this.game.physics.arcade.velocityFromRotation(this.ship.rotation-1.571, 400, bullet.body.velocity);
               this.bulletTime = this.game.time.now + 50;
           }
       }
