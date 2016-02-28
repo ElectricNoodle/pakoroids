@@ -73,7 +73,7 @@
 
           if (bullet)
           {
-              bullet.reset(this.ship.body.x-(Math.sin(this.ship.rotation)*(1)), this.ship.body.y+(Math.sin(this.ship.rotation+1.581)*(1)));
+              bullet.reset(this.ship.body.x-(Math.sin(this.ship.rotation)*(-40)), this.ship.body.y+(Math.sin(this.ship.rotation+1.581)*(-40)));
               bullet.lifespan = 2000;
               bullet.rotation = this.ship.rotation;
               this.game.physics.arcade.velocityFromRotation(this.ship.rotation-1.571, 400, bullet.body.velocity);
