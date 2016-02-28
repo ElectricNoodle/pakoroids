@@ -121,7 +121,7 @@
               bullet.reset(this.ship.body.x-(Math.sin(this.ship.rotation)*(-40)), this.ship.body.y+(Math.sin(this.ship.rotation+1.581)*(-40)));
               bullet.lifespan = 2000;
               bullet.rotation = this.ship.rotation;
-              bullet.body.force.x = Math.cos(this.ship.rotation-1.581) * 4000;    // accelerateToObject 
+              bullet.body.force.x = Math.cos(this.ship.rotation) * 4000;    // accelerateToObject 
               bullet.body.force.y = Math.sin(this.ship.rotation) * 4000;
               //this.game.physics.arcade.velocityFromRotation(this.ship.rotation-1.581, 400, bullet.body.velocity);
               this.bulletTime = this.game.time.now + 50;
