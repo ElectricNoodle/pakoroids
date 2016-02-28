@@ -18,6 +18,7 @@
       this.load.image('rickypakmedium', 'assets/images/pakora/medium/ricky-pakora.png');
       this.load.image('rickypaksmall', 'assets/images/pakora/small/ricky-pakora.png');
       this.load.image('craigsamlarge', 'assets/images/pakora/big/craig-samosa.png');
+      this.load.image('lives', 'assets/images/gui/lives.png');
 
       this.load.image('bullet','assets/images/splodge.png');
 

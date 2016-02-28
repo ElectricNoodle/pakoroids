@@ -38,6 +38,9 @@
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
+
+        //his.ship = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'andy');
+
         this.players.enableBody = true;
         this.players.physicsBodyType = Phaser.Physics.P2JS;
 
@@ -46,7 +49,10 @@
         this.ship.body.collides([this.playerCollisionGroup, this.pakoraCollisionGroup])
 
         this.game.physics.p2.enable(this.ship);
+
         this.game.camera.follow(this.ship);
+        this.game.physics.p2.enable(this.ship);
+
 
         //  Our ships bullets
         this.bullets = this.game.add.group();
@@ -65,7 +71,20 @@
           child.body.setCollisionGroup(that.bulletCollisionGroup)
         })
         this.bulletTime = 0;
+
+
+
+        this.livesText = this.game.add.text( this.game.width - 140, 40, 'Lives: ', { font: '16px Arial', fill: '#ffffff' } );
+        this.livesText.fixedToCamera = true;
+        this.lives = 3;
+        this.livesTexture = this.game.add.sprite(this.game.width - 90,30,'lives');
+        this.livesTexture.fixedToCamera = true;
+        this.score = 0;
+        this.scoreText = this.game.add.text( 20, 40, 'Score: ' + this.score, { font: '16px Arial', fill: '#ffffff' } );
+        this.scoreText.fixedToCamera = true;
+
         this.game.physics.p2.updateBoundsCollisionGroup();
+
 
       },
 
@@ -86,6 +105,8 @@
 
       if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
         this.fireBullet();}
+
+      this.showLives();
     },
 
 
@@ -130,13 +151,27 @@
 
     },
 
+
+    showLives: function () {
+      switch(this.lives){
+        case 0:
+          //TODO: YOU DEAD. 
+          break;
+        case 1:
+          
+          break;
+        case 2:
+
+          break;
+        case 3:
+
+          break;
+      }
+    },
+
     handleLarge: function(body1, body2) {
       console.log(body1, body2);
     },
-
-
-
-
 
 
 
