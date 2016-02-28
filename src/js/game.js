@@ -30,8 +30,9 @@
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
         this.ship = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'andy');
-        this.game.physics.p2.enable(this.ship);
         this.game.camera.follow(this.ship);
+        this.game.physics.p2.enable(this.ship);
+
 
             //  Our ships bullets
         this.bullets = this.game.add.group();
@@ -44,6 +45,17 @@
 
         this.bullets.setAll('anchor.y', 0.1);
         this.bulletTime = 0;
+
+
+        this.livesText = this.game.add.text( this.game.width - 140, 40, 'Lives: ', { font: '16px Arial', fill: '#ffffff' } );
+        this.livesText.fixedToCamera = true;
+        this.lives = 3;
+        this.livesTexture = this.game.add.sprite(this.game.width - 90,30,'lives');
+        this.livesTexture.fixedToCamera = true;
+        this.score = 0;
+        this.scoreText = this.game.add.text( 20, 40, 'Score: ' + this.score, { font: '16px Arial', fill: '#ffffff' } );
+        this.scoreText.fixedToCamera = true;
+
       },
 
     update: function () {
@@ -63,6 +75,8 @@
 
       if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
         this.fireBullet();}
+
+      this.showLives();
     },
 
     fireBullet: function () {
@@ -83,7 +97,22 @@
 
     },
 
+    showLives: function () {
+      switch(this.lives){
+        case 0:
+          //TODO: YOU DEAD. 
+          break;
+        case 1:
+          
+          break;
+        case 2:
 
+          break;
+        case 3:
+
+          break;
+      }
+    },
 
 
 
