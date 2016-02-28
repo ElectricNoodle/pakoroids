@@ -1,11 +1,11 @@
 (function() {
   'use strict';
-
+  var that;
   function Game() {}
 
   Game.prototype = {
       create: function () {
-        var that = this;
+        that = this;
         this.game.physics.startSystem(Phaser.Physics.P2JS);
         this.game.physics.p2.setImpactEvents(true);
         this.game.physics.p2.friction = 0;
@@ -17,18 +17,45 @@
         this.robsLarge = this.game.add.group();
         this.rickysLarge = this.game.add.group();
         this.craigsLarge = this.game.add.group();
+        this.robsMedium = this.game.add.group();
+        this.rickysMedium = this.game.add.group();
+        this.craigsMedium = this.game.add.group();
+        this.robsSmall = this.game.add.group();
+        this.rickysSmall = this.game.add.group();
+        this.craigsSmall = this.game.add.group();
 
         this.robsLarge.enableBody=true;
         this.rickysLarge.enableBody=true;
         this.craigsLarge.enableBody=true;
+        this.robsMedium.enableBody=true;
+        this.rickysMedium.enableBody=true;
+        this.craigsMedium.enableBody=true;
+        this.robsSmall.enableBody=true;
+        this.rickysSmall.enableBody=true;
+        this.craigsSmall.enableBody=true;
 
         this.robsLarge.physicsBodyType = Phaser.Physics.P2JS;
         this.rickysLarge.physicsBodyType = Phaser.Physics.P2JS;
         this.craigsLarge.physicsBodyType = Phaser.Physics.P2JS;
+        this.robsMedium.physicsBodyType = Phaser.Physics.P2JS;
+        this.rickysMedium.physicsBodyType = Phaser.Physics.P2JS;
+        this.craigsMedium.physicsBodyType = Phaser.Physics.P2JS;
+        this.robsSmall.physicsBodyType = Phaser.Physics.P2JS;
+        this.rickysSmall.physicsBodyType = Phaser.Physics.P2JS;
+        this.craigsSmall.physicsBodyType = Phaser.Physics.P2JS;
 
         this.playerCollisionGroup = this.game.physics.p2.createCollisionGroup();
         this.pakoraCollisionGroup = this.game.physics.p2.createCollisionGroup();
         this.bulletCollisionGroup = this.game.physics.p2.createCollisionGroup();
+
+        this.pakoraDegradationMap = {
+          "robpaklarge": "robpakmedium",
+          "robpakmedium": "robpaksmall",
+          "craigsamlarge": "craigsammedium",
+          "craigsammedium": "craigsamsmall",
+          "rickypaklarge": "rickypakmedium",
+          "rickypakmedium": "rickypaksmall"
+        }
 
 
         for (var i = 0; i < 25; i++) {
@@ -126,7 +153,22 @@
       asteroid.body.setCollisionGroup(this.pakoraCollisionGroup);
       asteroid.body.collides([this.pakoraCollisionGroup])
       asteroid.body.collides(this.playerCollisionGroup)
-      asteroid.body.collides(this.bulletCollisionGroup, this.handleLarge)
+      asteroid.body.collides(this.bulletCollisionGroup, this.handlePakoraCollision)
+      asteroid.body.pakoraType = "large";
+
+      this.game.physics.p2.enable(asteroid, false);
+    },
+
+    generatePakora: function(type, sprite, x, y, forcex, forcey) {
+      var pakType = this.game.rnd.integerInRange(0, 2);
+      var asteroid = this.robsLarge.create(x, y, sprite);
+      asteroid.body.setCollisionGroup(this.pakoraCollisionGroup);
+      asteroid.body.collides([this.pakoraCollisionGroup])
+      asteroid.body.collides(this.playerCollisionGroup)
+      asteroid.body.collides(this.bulletCollisionGroup, this.handlePakoraCollision)
+      asteroid.body.force.x = forcex;
+      asteroid.body.force.y = forcey;
+      asteroid.body.pakoraType = type;
 
       this.game.physics.p2.enable(asteroid, false);
     },
@@ -142,9 +184,8 @@
               bullet.reset(this.ship.body.x-(Math.sin(this.ship.rotation)*(-40)), this.ship.body.y+(Math.sin(this.ship.rotation+1.581)*(-40)));
               bullet.lifespan = 2000;
               bullet.rotation = this.ship.rotation;
-              bullet.body.force.x = Math.cos(this.ship.rotation-1.581)*100000;
-              bullet.body.force.y = Math.sin(this.ship.rotation-1.581)*100000;
-              //this.game.physics.arcade.velocityFromRotation(this.ship.rotation-1.581, 400, bullet.body.velocity);
+              bullet.body.force.x = Math.cos(this.ship.rotation-1.581)*50000;
+              bullet.body.force.y = Math.sin(this.ship.rotation-1.581)*50000;
               this.bulletTime = this.game.time.now + 50;
           }
       }
@@ -169,9 +210,32 @@
       }
     },
 
-    handleLarge: function(body1, body2) {
+    handlePakoraCollision: function(body1, body2) {
+      //body2.sprite.destroy();
+      //body2.destroy();
+      body2.reset();
       console.log(body1, body2);
+      var origX = body1.x;
+      var origY = body1.y;
+      var forceX = body1.force.x;
+      var forceY = body1.force.y;
+
+      var nextSprite = that.pakoraDegradationMap[body1.sprite.key];
+
+      if (body1.pakoraType == "large"){
+        that.generatePakora("medium",nextSprite,origX-20,origY-20,forceX, forceY);
+        that.generatePakora("medium",nextSprite,origX+20,origY+20,forceX, forceY);
+      }
+
+      if (body1.pakoraType == "medium"){
+        that.generatePakora("small",nextSprite,origX-20,origY-20,forceX, forceY);
+        that.generatePakora("small",nextSprite,origX+20,origY+20,forceX, forceY);
+        that.generatePakora("small",nextSprite,origX+10,origY+10,forceX, forceY);
+        that.generatePakora("small",nextSprite,origX-10,origY-10,forceX, forceY);
+      }
+
       body1.sprite.destroy();
+
     },
 
 
