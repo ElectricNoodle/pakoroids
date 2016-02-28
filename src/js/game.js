@@ -5,46 +5,73 @@
 
   Game.prototype = {
       create: function () {
+        var that = this;
         this.game.physics.startSystem(Phaser.Physics.P2JS);
+        this.game.physics.p2.setImpactEvents(true);
+        this.game.physics.p2.friction = 0;
+        this.game.physics.p2.restitution = 0;
+
         this.game.world.setBounds(-1000,-1000,2000,2000);
         this.background = this.game.add.tileSprite(-1000, -1000, 2000, 2000, 'background');
+        this.players = this.game.add.group();
         this.robsLarge = this.game.add.group();
         this.rickysLarge = this.game.add.group();
         this.craigsLarge = this.game.add.group();
-        for (var i = 0; i < 10; i++) {
-            var robAsteroid = this.robsLarge.create(this.game.rnd.integerInRange(-1000, 2000), this.game.rnd.integerInRange(-1000, 2000), 'robpaklarge');
-            this.game.physics.p2.enable(robAsteroid,false);
-            console.log('adding bullet', i);
-        }
-        for (i = 0; i < 10; i++) {
-            var rickyAsteroid = this.rickysLarge.create(this.game.rnd.integerInRange(-1000, 2000), this.game.rnd.integerInRange(-1000, 2000), 'rickypaklarge');
-            this.game.physics.p2.enable(rickyAsteroid,false);
-            console.log('adding bullet', i);
-        }
-        for (i = 0; i < 10; i++) {
-            var craigAsteroid = this.craigsLarge.create(this.game.rnd.integerInRange(-1000, 2000), this.game.rnd.integerInRange(-1000, 2000), 'craigsamlarge');
-            this.game.physics.p2.enable(craigAsteroid,false);
-            console.log('adding bullet', i);
-        }
+
+        this.robsLarge.enableBody=true;
+        this.rickysLarge.enableBody=true;
+        this.craigsLarge.enableBody=true;
+
+        this.robsLarge.physicsBodyType = Phaser.Physics.P2JS;
+        this.rickysLarge.physicsBodyType = Phaser.Physics.P2JS;
+        this.craigsLarge.physicsBodyType = Phaser.Physics.P2JS;
+
+        this.playerCollisionGroup = this.game.physics.p2.createCollisionGroup();
+        this.pakoraCollisionGroup = this.game.physics.p2.createCollisionGroup();
+        this.bulletCollisionGroup = this.game.physics.p2.createCollisionGroup();
+
+
+        for (var i = 0; i < 25; i++) {
+          this.spawnPakora();
+        };
+
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
-        this.ship = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'andy');
+
+        //his.ship = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'andy');
+
+        this.players.enableBody = true;
+        this.players.physicsBodyType = Phaser.Physics.P2JS;
+
+        this.ship = this.players.create(this.game.world.centerX, this.game.world.centerY, 'andy');
+        this.ship.body.setCollisionGroup(this.playerCollisionGroup)
+        this.ship.body.collides([this.playerCollisionGroup, this.pakoraCollisionGroup])
+
+        this.game.physics.p2.enable(this.ship);
+
         this.game.camera.follow(this.ship);
         this.game.physics.p2.enable(this.ship);
 
 
-            //  Our ships bullets
+        //  Our ships bullets
         this.bullets = this.game.add.group();
         this.bullets.enableBody = true;
-        this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
+        this.bullets.physicsBodyType = Phaser.Physics.P2JS;
+
+        
         //  All 40 of them
         this.bullets.createMultiple(40, 'bullet');
         this.bullets.setAll('anchor.x', 0.1);
 
-
         this.bullets.setAll('anchor.y', 0.1);
+
+        this.bullets.children.forEach(function(child){
+          console.log(child)
+          child.body.setCollisionGroup(that.bulletCollisionGroup)
+        })
         this.bulletTime = 0;
+
 
 
         this.livesText = this.game.add.text( this.game.width - 140, 40, 'Lives: ', { font: '16px Arial', fill: '#ffffff' } );
@@ -55,6 +82,9 @@
         this.score = 0;
         this.scoreText = this.game.add.text( 20, 40, 'Score: ' + this.score, { font: '16px Arial', fill: '#ffffff' } );
         this.scoreText.fixedToCamera = true;
+
+        this.game.physics.p2.updateBoundsCollisionGroup();
+
 
       },
 
@@ -79,6 +109,28 @@
       this.showLives();
     },
 
+
+    spawnPakora: function() {
+      var pakType = this.game.rnd.integerInRange(0, 2);
+      switch (pakType){
+        case 0:
+          var asteroid = this.robsLarge.create(this.game.rnd.integerInRange(-1000, 2000), this.game.rnd.integerInRange(-1000, 2000), 'robpaklarge');
+          break;
+        case 1:
+          var asteroid = this.craigsLarge.create(this.game.rnd.integerInRange(-1000, 2000), this.game.rnd.integerInRange(-1000, 2000), 'craigsamlarge');
+          break;
+        case 2:
+          var asteroid = this.rickysLarge.create(this.game.rnd.integerInRange(-1000, 2000), this.game.rnd.integerInRange(-1000, 2000), 'rickypaklarge');
+          break;        
+      }
+      asteroid.body.setCollisionGroup(this.pakoraCollisionGroup);
+      asteroid.body.collides([this.pakoraCollisionGroup])
+      asteroid.body.collides(this.playerCollisionGroup)
+      asteroid.body.collides(this.bulletCollisionGroup, this.handleLarge)
+
+      this.game.physics.p2.enable(asteroid, false);
+    },
+
     fireBullet: function () {
 
       if (this.game.time.now > this.bulletTime)
@@ -90,12 +142,15 @@
               bullet.reset(this.ship.body.x-(Math.sin(this.ship.rotation)*(-40)), this.ship.body.y+(Math.sin(this.ship.rotation+1.581)*(-40)));
               bullet.lifespan = 2000;
               bullet.rotation = this.ship.rotation;
-              this.game.physics.arcade.velocityFromRotation(this.ship.rotation-1.571, 400, bullet.body.velocity);
+              bullet.body.force.x = Math.cos(this.ship.rotation-1.581) * 4000;    // accelerateToObject 
+              bullet.body.force.y = Math.sin(this.ship.rotation) * 4000;
+              //this.game.physics.arcade.velocityFromRotation(this.ship.rotation-1.581, 400, bullet.body.velocity);
               this.bulletTime = this.game.time.now + 50;
           }
       }
 
     },
+
 
     showLives: function () {
       switch(this.lives){
@@ -114,7 +169,9 @@
       }
     },
 
-
+    handleLarge: function(body1, body2) {
+      console.log(body1, body2);
+    },
 
 
 
