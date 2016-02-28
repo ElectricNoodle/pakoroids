@@ -5,8 +5,11 @@
 
   Game.prototype = {
       create: function () {
+        var that = this;
         this.game.physics.startSystem(Phaser.Physics.P2JS);
         this.game.physics.p2.setImpactEvents(true);
+        this.game.physics.p2.friction = 0;
+        this.game.physics.p2.restitution = 0;
 
         this.game.world.setBounds(-1000,-1000,2000,2000);
         this.background = this.game.add.tileSprite(-1000, -1000, 2000, 2000, 'background');
@@ -25,9 +28,10 @@
 
         this.playerCollisionGroup = this.game.physics.p2.createCollisionGroup();
         this.pakoraCollisionGroup = this.game.physics.p2.createCollisionGroup();
+        this.bulletCollisionGroup = this.game.physics.p2.createCollisionGroup();
 
 
-        for (var i = 0; i < 100; i++) {
+        for (var i = 0; i < 25; i++) {
           this.spawnPakora();
         };
 
@@ -47,17 +51,19 @@
         //  Our ships bullets
         this.bullets = this.game.add.group();
         this.bullets.enableBody = true;
-        this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
+        this.bullets.physicsBodyType = Phaser.Physics.P2JS;
 
         
         //  All 40 of them
         this.bullets.createMultiple(40, 'bullet');
         this.bullets.setAll('anchor.x', 0.1);
-        console.log(this.bullets);
-        //this.robsLarge.body.collides(this.bullets, this.handleLarge, this);
-        //this.robsLarge.setCollisionGroup(this.pakoraCollisionGroup);
 
         this.bullets.setAll('anchor.y', 0.1);
+
+        this.bullets.children.forEach(function(child){
+          console.log(child)
+          child.body.setCollisionGroup(that.bulletCollisionGroup)
+        })
         this.bulletTime = 0;
         this.game.physics.p2.updateBoundsCollisionGroup();
 
@@ -97,7 +103,9 @@
           break;        
       }
       asteroid.body.setCollisionGroup(this.pakoraCollisionGroup);
-      asteroid.body.collides([this.playerCollisionGroup, this.pakoraCollisionGroup])
+      asteroid.body.collides([this.pakoraCollisionGroup])
+      asteroid.body.collides(this.playerCollisionGroup)
+      asteroid.body.collides(this.bulletCollisionGroup, this.handleLarge)
 
       this.game.physics.p2.enable(asteroid, false);
     },
@@ -113,7 +121,9 @@
               bullet.reset(this.ship.body.x-(Math.sin(this.ship.rotation)*(-40)), this.ship.body.y+(Math.sin(this.ship.rotation+1.581)*(-40)));
               bullet.lifespan = 2000;
               bullet.rotation = this.ship.rotation;
-              this.game.physics.arcade.velocityFromRotation(this.ship.rotation-1.581, 400, bullet.body.velocity);
+              bullet.body.force.x = Math.cos(this.ship.rotation-1.581) * 4000;    // accelerateToObject 
+              bullet.body.force.y = Math.sin(this.ship.rotation) * 4000;
+              //this.game.physics.arcade.velocityFromRotation(this.ship.rotation-1.581, 400, bullet.body.velocity);
               this.bulletTime = this.game.time.now + 50;
           }
       }
