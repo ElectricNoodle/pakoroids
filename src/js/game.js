@@ -171,6 +171,7 @@
 
     handleLarge: function(body1, body2) {
       console.log(body1, body2);
+      body1.sprite.destroy();
     },
 
 
