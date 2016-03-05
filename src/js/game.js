@@ -121,7 +121,9 @@
       },
 
     update: function () {
-      //this.robsLarge.forEachAlive(this.moveBullets,this);  //make this.bullets accelerate to ship
+      this.robsLarge.forEachAlive(this.moveBullets,this);  //make this.bullets accelerate to ship
+      this.rickysSmall.forEachAlive(this.moveBullets,this);
+      this.craigsSmall.forEachAlive(this.moveBullets,this);
       //this.background.tilePosition = this.game.camera.position;
       if (this.cursors.left.isDown) {
         this.ship.body.rotateLeft(100);
@@ -230,6 +232,7 @@
       if (body1.pakoraType == "large"){
         that.generatePakora("medium",nextSprite,origX-20,origY-20,forceX, forceY);
         that.generatePakora("medium",nextSprite,origX+20,origY+20,forceX, forceY);
+        that.score+=10;
       }
 
       if (body1.pakoraType == "medium"){
@@ -237,7 +240,13 @@
         that.generatePakora("small",nextSprite,origX+20,origY+20,forceX, forceY);
         that.generatePakora("small",nextSprite,origX+10,origY+10,forceX, forceY);
         that.generatePakora("small",nextSprite,origX-10,origY-10,forceX, forceY);
+        that.score+=20
       }
+
+      if (body1.pakoraType == "small"){
+        that.score+=50
+      }
+      that.scoreText.setText('Score: ' + that.score);
 
       body1.sprite.destroy();
 
@@ -246,7 +255,21 @@
 
 
     moveBullets: function (bullet) { 
-      this.accelerateToObject(bullet,this.ship,30);  //start accelerateToObject on every bullet
+      var speed = 0;
+      switch (bullet.width){
+        case 128:
+          speed = 20;
+          break;
+        case 64:
+          speed = 30;
+          break;
+        case 32:
+          speed = 60;
+          break;
+        default:
+          speed = 30;
+      }
+      this.accelerateToObject(bullet,this.ship,speed);  //start accelerateToObject on every bullet
     },
 
     accelerateToObject: function (obj1, obj2, speed) {
