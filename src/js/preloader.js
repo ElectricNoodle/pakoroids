@@ -21,6 +21,7 @@
       this.load.image('craigsammedium', 'assets/images/pakora/medium/craig-samosa.png');
       this.load.image('craigsamsmall', 'assets/images/pakora/small/craig-samosa.png');
       this.load.image('lives', 'assets/images/gui/lives.png');
+      this.load.shader('fisheye', 'assets/shaders/Fisheye.frag');
 
       this.load.image('bullet','assets/images/splodge.png');
 

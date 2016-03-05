@@ -11,8 +11,8 @@
         this.game.physics.p2.friction = 0;
         this.game.physics.p2.restitution = 0;
 
-        this.game.world.setBounds(-1000,-1000,2000,2000);
-        this.background = this.game.add.tileSprite(-1000, -1000, 2000, 2000, 'background');
+        this.game.world.setBounds(-10000,-10000,10000,10000);
+        this.background = this.game.add.tileSprite(-10000, -10000, 10000, 10000, 'background');
         this.players = this.game.add.group();
         this.robsLarge = this.game.add.group();
         this.rickysLarge = this.game.add.group();
@@ -57,8 +57,13 @@
           "rickypakmedium": "rickypaksmall"
         }
 
+        this.fisheye = new Phaser.Filter(this, null, this.cache.getShader('fisheye'));
+        this.fisheye.setResolution(1024, 768);
+        //this.world.filters = [this.fisheye]
 
-        for (var i = 0; i < 25; i++) {
+
+
+        for (var i = 0; i < 60; i++) {
           this.spawnPakora();
         };
 
