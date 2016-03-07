@@ -109,8 +109,13 @@
         this.livesText = this.game.add.text( this.game.width - 140, 40, 'Lives: ', { font: '16px Arial', fill: '#ffffff' } );
         this.livesText.fixedToCamera = true;
         this.lives = 3;
-        this.livesTexture = this.game.add.sprite(this.game.width - 90,30,'lives');
-        this.livesTexture.fixedToCamera = true;
+        this.livesTexture1 = this.game.add.sprite(this.game.width - 90,30,'life');
+        this.livesTexture2 = this.game.add.sprite(this.game.width - 75,30,'life');
+        this.livesTexture3 = this.game.add.sprite(this.game.width - 60,30,'life');
+        this.livesTexture1.fixedToCamera = true;
+        this.livesTexture2.fixedToCamera = true;
+        this.livesTexture3.fixedToCamera = true;
+
         this.score = 0;
         this.scoreText = this.game.add.text( 20, 40, 'Score: ' + this.score, { font: '16px Arial', fill: '#ffffff' } );
         this.scoreText.fixedToCamera = true;
@@ -159,7 +164,7 @@
       }
       asteroid.body.setCollisionGroup(this.pakoraCollisionGroup);
       asteroid.body.collides([this.pakoraCollisionGroup])
-      asteroid.body.collides(this.playerCollisionGroup)
+      asteroid.body.collides(this.playerCollisionGroup,this.handlePlayerPakoraCollision);
       asteroid.body.collides(this.bulletCollisionGroup, this.handlePakoraCollision)
       asteroid.body.pakoraType = "large";
 
@@ -170,9 +175,9 @@
       var pakType = this.game.rnd.integerInRange(0, 2);
       var asteroid = this.robsLarge.create(x, y, sprite);
       asteroid.body.setCollisionGroup(this.pakoraCollisionGroup);
-      asteroid.body.collides([this.pakoraCollisionGroup])
-      asteroid.body.collides(this.playerCollisionGroup)
-      asteroid.body.collides(this.bulletCollisionGroup, this.handlePakoraCollision)
+      asteroid.body.collides([this.pakoraCollisionGroup]);
+      asteroid.body.collides(this.playerCollisionGroup,this.handlePlayerPakoraCollision);
+      asteroid.body.collides(this.bulletCollisionGroup, this.handlePakoraCollision);
       asteroid.body.force.x = forcex;
       asteroid.body.force.y = forcey;
       asteroid.body.pakoraType = type;
@@ -201,18 +206,23 @@
 
 
     showLives: function () {
+      console.log("IN SHOW: " + this.lives);
+      if(this.lives < 0)
+        this.lives = 0;
       switch(this.lives){
         case 0:
-          //TODO: YOU DEAD. 
+          this.livesTexture1.visible = false;
           break;
         case 1:
-          
+          this.livesTexture2.visible = false;
           break;
         case 2:
-
+          this.livesTexture3.visible = false;
           break;
         case 3:
-
+          this.livesTexture1.visible = true;
+          this.livesTexture2.visible = true;
+          this.livesTexture3.visible = true;
           break;
       }
     },
@@ -251,7 +261,16 @@
       body1.sprite.destroy();
 
     },
-
+handlePlayerPakoraCollision: function(body1, body2) {
+    if(that.lives < 0){
+      that.lives = 0;
+    }
+      if(that.lives < 0){
+          console.log("YOU DEAD");
+      }else{
+        that.lives--;
+      }
+    },
 
 
     moveBullets: function (bullet) { 
