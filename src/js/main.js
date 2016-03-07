@@ -11,7 +11,7 @@ window.addEventListener('load', function () {
   game.state.start('boot');
 }, false);
 
-var socket = io('http://localhost');
+var socket = io('http://localhost:9000');
   socket.on('test', function (data) {
     console.log(data);
   });
