@@ -8,7 +8,7 @@ var gulp = require('gulp')
   , processhtml = require('gulp-processhtml')
   , jshint = require('gulp-jshint')
   , uglify = require('gulp-uglify')
-  , connect = require('gulp-connect')
+  , express = require('gulp-express')
   , paths;
 
 paths = {
@@ -79,16 +79,12 @@ gulp.task('lint', function() {
 
 gulp.task('html', function(){
   gulp.src('src/*.html')
-    .pipe(connect.reload())
+    .pipe(express.notify())
     .on('error', gutil.log);
 });
 
-gulp.task('connect', function () {
-  connect.server({
-    root: [__dirname + '/src'],
-    port: 9000,
-    livereload: true
-  });
+gulp.task('express', function () {
+  express.run(['server/app.js'])
 });
 
 gulp.task('watch', function () {
@@ -96,5 +92,5 @@ gulp.task('watch', function () {
   gulp.watch(['./src/index.html', paths.css, paths.js], ['html']);
 });
 
-gulp.task('default', ['connect', 'watch']);
+gulp.task('default', ['express', 'watch']);
 gulp.task('build', ['copy-assets', 'copy-vendor', 'uglify', 'minifycss', 'processhtml', 'minifyhtml']);

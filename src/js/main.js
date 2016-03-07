@@ -10,3 +10,8 @@ window.addEventListener('load', function () {
   /* yo phaser:state new-state-files-put-here */
   game.state.start('boot');
 }, false);
+
+var socket = io('http://localhost');
+  socket.on('test', function (data) {
+    console.log(data);
+  });
