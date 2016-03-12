@@ -102,6 +102,7 @@
         this.ship.body.collides([this.playerCollisionGroup, this.pakoraCollisionGroup])
 
         this.game.physics.p2.enable(this.ship);
+        this.ship.body.collidesWorldBounds = false;
 
         this.game.camera.follow(this.ship);
         this.game.physics.p2.enable(this.ship);
@@ -128,8 +129,10 @@
         if(this.DEBUG){
           this.pakoraCountText = this.game.add.text(140, 60, 'PakoraCount: ' + this.pakoraCount, { font: '16px Arial', fill: '#ffffff' } );
           this.powerupCountText = this.game.add.text(140, 80, 'PowerUpCount: ' + this.powerUpCount, { font: '16px Arial', fill: '#ffffff' } );
+          this.playerPosText = this.game.add.text(140, 100, 'PlayerPos: X:' + this.ship.position.x + ' Y:' +this.ship.position.y, { font: '16px Arial', fill: '#ffffff' } );
           this.pakoraCountText.fixedToCamera = true;
           this.powerupCountText.fixedToCamera = true;
+          this.playerPosText.fixedToCamera = true;
         }
         this.livesText = this.game.add.text( this.game.width - 140, 40, 'Lives: ', { font: '16px Arial', fill: '#ffffff' } );
         this.livesText.fixedToCamera = true;
@@ -154,6 +157,7 @@
       if(this.DEBUG){
         this.pakoraCountText.setText('PakoraCount: ' + this.pakoraCount);
         this.powerupCountText.setText('PowerUpCount: ' + this.powerUpCount);
+        this.playerPosText.setText('PlayerPos: X:' + parseInt(this.ship.position.x) + ' Y:' +parseInt(this.ship.position.y));
       }
 
       this.robsLarge.forEachAlive(this.moveBullets,this);  //make this.bullets accelerate to ship
@@ -175,9 +179,12 @@
       if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
         this.fireBullet();}
 
+
+      this.game.world.wrap(this.ship);
+      this.game.world.wrap(this.ship.body);
+
+
       this.showLives();
-
-
     },
 
     spawnPakoraTimed: function(){
@@ -236,8 +243,8 @@
                                      this.game.rnd.integerInRange(this.game.LBOUNDY, this.game.UBOUNDY),'dandip');
       dan.body.setCollisionGroup(this.powerUpCollisionGroup);
       dan.body.collides(this.playerCollisionGroup,this.handlePowerUpCollision);
-      dan.body.force.x = this.game.rnd.integerInRange(150,200);
-      dan.body.force.y = this.game.rnd.integerInRange(150,200);
+      dan.body.force.x = this.game.rnd.integerInRange(200,500);
+      dan.body.force.y = this.game.rnd.integerInRange(200,500);
       this.game.physics.p2.enable(dan,false);
       this.powerUpCount++;
       /*
