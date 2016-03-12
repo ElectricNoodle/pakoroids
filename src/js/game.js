@@ -12,7 +12,7 @@
         this.game.UBOUNDX = 10000;
         this.game.UBOUNDY = 10000;
 
-        this.MAX_PAKORA_COUNT = 10;
+        this.MAX_PAKORA_COUNT = 60;
         this.MAX_POWERUP_COUNT = 100;
 
         this.game.physics.startSystem(Phaser.Physics.P2JS);
@@ -54,11 +54,13 @@
         this.craigsSmall.physicsBodyType = Phaser.Physics.P2JS;
 
         this.danPowerUp = this.game.add.group();
+        this.danPowerUp.enableBody = true;
+        this.danPowerUp.physicsBodyType = Phaser.Physics.P2JS;
 
         this.playerCollisionGroup = this.game.physics.p2.createCollisionGroup();
         this.pakoraCollisionGroup = this.game.physics.p2.createCollisionGroup();
         this.bulletCollisionGroup = this.game.physics.p2.createCollisionGroup();
-        this.danPowerUpCollisionGroup = this.game.physics.p2.createCollisionGroup();
+        this.powerUpCollisionGroup = this.game.physics.p2.createCollisionGroup();
 
         this.pakoraDegradationMap = {
           "robpaklarge": "robpakmedium",
@@ -75,7 +77,7 @@
 
 
         this.pakoraCount = 0;
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < 50; i++) {
           this.spawnPakora();
         };
         this.game.time.events.loop(Phaser.Timer.SECOND, this.spawnPakoraTimed, this);
@@ -232,6 +234,11 @@
 
       var dan= this.danPowerUp.create(this.game.rnd.integerInRange(this.game.LBOUNDX, this.game.UBOUNDX),
                                      this.game.rnd.integerInRange(this.game.LBOUNDY, this.game.UBOUNDY),'dandip');
+      dan.body.setCollisionGroup(this.powerUpCollisionGroup);
+      dan.body.collides(this.playerCollisionGroup,this.handlePowerUpCollision);
+      dan.body.force.x = this.game.rnd.integerInRange(150,200);
+      dan.body.force.y = this.game.rnd.integerInRange(150,200);
+      this.game.physics.p2.enable(dan,false);
       this.powerUpCount++;
     },
     fireBullet: function () {
@@ -312,16 +319,20 @@
       that.pakoraCount--;
 
     },
-handlePlayerPakoraCollision: function(body1, body2) {
-    if(that.lives < 0){
-      that.lives = 0;
-    }
-      if(that.lives < 0){
-          console.log("YOU DEAD");
-      }else{
-        that.lives--;
-      }
-    },
+    handlePlayerPakoraCollision: function(body1, body2) {
+        if(that.lives < 0){
+          that.lives = 0;
+        }
+          if(that.lives < 0){
+              console.log("YOU DEAD");
+          }else{
+            that.lives--;
+          }
+        },
+    handlePowerUpCollision: function(body1,body2){
+      console.log("WOO");
+      body1.sprite.destroy();
+    },    
 
 
     moveBullets: function (bullet) { 
