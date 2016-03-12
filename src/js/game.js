@@ -12,8 +12,8 @@
         this.game.UBOUNDX = 10000;
         this.game.UBOUNDY = 10000;
 
-        this.MAX_PAKORA_COUNT = 60;
-        this.MAX_POWERUP_COUNT = 100;
+        this.MAX_PAKORA_COUNT = 0;
+        this.MAX_POWERUP_COUNT = 10;
 
         this.game.physics.startSystem(Phaser.Physics.P2JS);
         this.game.physics.p2.setImpactEvents(true);
@@ -240,6 +240,18 @@
       dan.body.force.y = this.game.rnd.integerInRange(150,200);
       this.game.physics.p2.enable(dan,false);
       this.powerUpCount++;
+      /*
+      var trail = this.game.add.emitter(0, 0, 1000);
+      trail.makeParticles('dandip');
+      dan.addChild(trail);
+      trail.y = 0;
+      trail.x = -16;
+      trail.lifespan = 500;
+      trail.maxParticleSpeed = new Phaser.Point(-100,50);
+      trail.minParticleSpeed = new Phaser.Point(-200,-50);
+      //trail.emitParticle();
+  
+  */
     },
     fireBullet: function () {
 
