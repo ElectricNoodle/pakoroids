@@ -6,13 +6,22 @@
   Game.prototype = {
       create: function () {
         that = this;
+        this.DEBUG = true;
+        this.game.LBOUNDX = -10000;
+        this.game.LBOUNDY = -10000;
+        this.game.UBOUNDX = 10000;
+        this.game.UBOUNDY = 10000;
+
+        this.MAX_PAKORA_COUNT = 10;
+        this.MAX_POWERUP_COUNT = 100;
+
         this.game.physics.startSystem(Phaser.Physics.P2JS);
         this.game.physics.p2.setImpactEvents(true);
         this.game.physics.p2.friction = 0;
         this.game.physics.p2.restitution = 0;
 
-        this.game.world.setBounds(-10000,-10000,10000,10000);
-        this.background = this.game.add.tileSprite(-10000, -10000, 10000, 10000, 'background');
+        this.game.world.setBounds(this.game.LBOUNDX,this.game.LBOUNDY,this.game.UBOUNDX,this.game.UBOUNDY);
+        this.background = this.game.add.tileSprite(this.game.LBOUNDX,this.game.LBOUNDY,this.game.UBOUNDX,this.game.UBOUNDY, 'background');
         this.players = this.game.add.group();
         this.robsLarge = this.game.add.group();
         this.rickysLarge = this.game.add.group();
@@ -65,14 +74,17 @@
         //this.world.filters = [this.fisheye]
 
 
-
-        for (var i = 0; i < 60; i++) {
+        this.pakoraCount = 0;
+        for (var i = 0; i < 5; i++) {
           this.spawnPakora();
         };
+        this.game.time.events.loop(Phaser.Timer.SECOND, this.spawnPakoraTimed, this);
 
-        for(var i =0; i < 10000; i++){
+        this.powerUpCount = 0;
+        for(var i =0; i < 100; i++){
           this.spawnPowerUp();
         }
+        this.game.time.events.loop(Phaser.Timer.SECOND * 4, this.spawnPowerUpTimed, this);
         
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -111,8 +123,12 @@
         })
         this.bulletTime = 0;
 
-
-
+        if(this.DEBUG){
+          this.pakoraCountText = this.game.add.text(140, 60, 'PakoraCount: ' + this.pakoraCount, { font: '16px Arial', fill: '#ffffff' } );
+          this.powerupCountText = this.game.add.text(140, 80, 'PowerUpCount: ' + this.powerUpCount, { font: '16px Arial', fill: '#ffffff' } );
+          this.pakoraCountText.fixedToCamera = true;
+          this.powerupCountText.fixedToCamera = true;
+        }
         this.livesText = this.game.add.text( this.game.width - 140, 40, 'Lives: ', { font: '16px Arial', fill: '#ffffff' } );
         this.livesText.fixedToCamera = true;
         this.lives = 3;
@@ -133,6 +149,11 @@
       },
 
     update: function () {
+      if(this.DEBUG){
+        this.pakoraCountText.setText('PakoraCount: ' + this.pakoraCount);
+        this.powerupCountText.setText('PowerUpCount: ' + this.powerUpCount);
+      }
+
       this.robsLarge.forEachAlive(this.moveBullets,this);  //make this.bullets accelerate to ship
       this.rickysSmall.forEachAlive(this.moveBullets,this);
       this.craigsSmall.forEachAlive(this.moveBullets,this);
@@ -153,20 +174,29 @@
         this.fireBullet();}
 
       this.showLives();
+
+
     },
 
-
+    spawnPakoraTimed: function(){
+      if(this.pakoraCount < this.MAX_PAKORA_COUNT){
+        this.spawnPakora();
+      }
+    },
     spawnPakora: function() {
       var pakType = this.game.rnd.integerInRange(0, 2);
       switch (pakType){
         case 0:
-          var asteroid = this.robsLarge.create(this.game.rnd.integerInRange(-1000, 2000), this.game.rnd.integerInRange(-1000, 2000), 'robpaklarge');
+          var asteroid = this.robsLarge.create(this.game.rnd.integerInRange(this.game.LBOUNDX, this.game.UBOUNDX),
+                                              this.game.rnd.integerInRange(this.game.LBOUNDY,this.game.UBOUNDY), 'robpaklarge');
           break;
         case 1:
-          var asteroid = this.craigsLarge.create(this.game.rnd.integerInRange(-1000, 2000), this.game.rnd.integerInRange(-1000, 2000), 'craigsamlarge');
+          var asteroid = this.craigsLarge.create(this.game.rnd.integerInRange(this.game.LBOUNDX, this.game.UBOUNDX),
+                                              this.game.rnd.integerInRange(this.game.LBOUNDY,this.game.UBOUNDY), 'craigsamlarge');
           break;
         case 2:
-          var asteroid = this.rickysLarge.create(this.game.rnd.integerInRange(-1000, 2000), this.game.rnd.integerInRange(-1000, 2000), 'rickypaklarge');
+          var asteroid = this.rickysLarge.create(this.game.rnd.integerInRange(this.game.LBOUNDX, this.game.UBOUNDX),
+                                              this.game.rnd.integerInRange(this.game.LBOUNDY,this.game.UBOUNDY), 'rickypaklarge');
           break;        
       }
       asteroid.body.setCollisionGroup(this.pakoraCollisionGroup);
@@ -176,6 +206,7 @@
       asteroid.body.pakoraType = "large";
 
       this.game.physics.p2.enable(asteroid, false);
+      this.pakoraCount++;
     },
 
     generatePakora: function(type, sprite, x, y, forcex, forcey) {
@@ -190,12 +221,19 @@
       asteroid.body.pakoraType = type;
 
       this.game.physics.p2.enable(asteroid, false);
+      this.pakoraCount++;
     },
-    spawnPowerUp: function(number,sprite,x,y){
-      var x = this.game.rnd.integerInRange(0, this.game.width - sprite.width);
-      var y = this.game.rnd.integerInRange(0, this.game.width - sprite.height);
-      var danPowerUp = this.danPowerUp.create(x,y,sprite);
-    }
+    spawnPowerUpTimed: function(){
+      if(this.powerUpCount < this.MAX_POWERUP_COUNT){
+        this.spawnPowerUp();
+      }
+    },
+    spawnPowerUp: function(){
+
+      var dan= this.danPowerUp.create(this.game.rnd.integerInRange(this.game.LBOUNDX, this.game.UBOUNDX),
+                                     this.game.rnd.integerInRange(this.game.LBOUNDY, this.game.UBOUNDY),'dandip');
+      this.powerUpCount++;
+    },
     fireBullet: function () {
 
       if (this.game.time.now > this.bulletTime)
@@ -217,9 +255,10 @@
 
 
     showLives: function () {
-      console.log("IN SHOW: " + this.lives);
-      if(this.lives < 0)
+      if(this.lives < 0){
         this.lives = 0;
+      }
+      
       switch(this.lives){
         case 0:
           this.livesTexture1.visible = false;
@@ -270,6 +309,7 @@
       that.scoreText.setText('Score: ' + that.score);
 
       body1.sprite.destroy();
+      that.pakoraCount--;
 
     },
 handlePlayerPakoraCollision: function(body1, body2) {
