@@ -44,9 +44,12 @@
         this.rickysSmall.physicsBodyType = Phaser.Physics.P2JS;
         this.craigsSmall.physicsBodyType = Phaser.Physics.P2JS;
 
+        this.danPowerUp = this.game.add.group();
+
         this.playerCollisionGroup = this.game.physics.p2.createCollisionGroup();
         this.pakoraCollisionGroup = this.game.physics.p2.createCollisionGroup();
         this.bulletCollisionGroup = this.game.physics.p2.createCollisionGroup();
+        this.danPowerUpCollisionGroup = this.game.physics.p2.createCollisionGroup();
 
         this.pakoraDegradationMap = {
           "robpaklarge": "robpakmedium",
@@ -67,6 +70,10 @@
           this.spawnPakora();
         };
 
+        for(var i =0; i < 10000; i++){
+          this.spawnPowerUp();
+        }
+        
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
@@ -184,7 +191,11 @@
 
       this.game.physics.p2.enable(asteroid, false);
     },
-
+    spawnPowerUp: function(number,sprite,x,y){
+      var x = this.game.rnd.integerInRange(0, this.game.width - sprite.width);
+      var y = this.game.rnd.integerInRange(0, this.game.width - sprite.height);
+      var danPowerUp = this.danPowerUp.create(x,y,sprite);
+    }
     fireBullet: function () {
 
       if (this.game.time.now > this.bulletTime)

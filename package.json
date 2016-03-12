@@ -27,7 +27,8 @@
     "gulp-connect": "*",
     "gulp-watch": "*",
     "tiny-lr": "*",
-    "del": "*"
+    "del": "*",
+    "express":"*"
   },
   "scripts": {
     "post-install": "node ./node_modules/bower/bin/bower install",
