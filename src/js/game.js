@@ -13,7 +13,7 @@
         this.game.UBOUNDY = 10000;
 
         this.MAX_PAKORA_COUNT = 0;
-        this.MAX_POWERUP_COUNT = 10;
+        this.MAX_POWERUP_COUNT = 1;
 
         this.game.physics.startSystem(Phaser.Physics.P2JS);
         this.game.physics.p2.setImpactEvents(true);
@@ -148,7 +148,7 @@
         this.scoreText = this.game.add.text( 20, 40, 'Score: ' + this.score, { font: '16px Arial', fill: '#ffffff' } );
         this.scoreText.fixedToCamera = true;
 
-        this.game.physics.p2.updateBoundsCollisionGroup();
+        //this.game.physics.p2.updateBoundsCollisionGroup();
 
 
       },
@@ -247,7 +247,7 @@
       dan.body.force.y = this.game.rnd.integerInRange(200,500);
       this.game.physics.p2.enable(dan,false);
       this.powerUpCount++;
-      /*
+      /**
       var trail = this.game.add.emitter(0, 0, 1000);
       trail.makeParticles('dandip');
       dan.addChild(trail);
@@ -256,9 +256,10 @@
       trail.lifespan = 500;
       trail.maxParticleSpeed = new Phaser.Point(-100,50);
       trail.minParticleSpeed = new Phaser.Point(-200,-50);
-      //trail.emitParticle();
+      trail.emitParticle();
+      */
   
-  */
+  
     },
     fireBullet: function () {
 
