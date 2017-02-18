@@ -6,6 +6,8 @@
   Gameover.prototype = {
     create: function () {
       this.background = this.game.add.tileSprite(this.game.LBOUNDX,this.game.LBOUNDY,1366,768, 'background');
+      this.world.setBounds(0, 0, 1024, 768);
+
       var text = this.add.text(this.game.width * 0.5, this.game.height * 0.5,
         'You dead, score: ' + this.game.state.states['gameover'].score , {font: '72px Arial', fill: '#ffffff', align: 'center'
       });
@@ -21,7 +23,7 @@
       }
     },
     onDown: function () {
-      this.game.state.start('menu');
+      //this.game.state.start('menu');
     }
   };
 
