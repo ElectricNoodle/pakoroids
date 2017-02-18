@@ -14,7 +14,6 @@
       this.input.onDown.add(this.onDown, this);
       console.log(this);
     },
-
     update: function () {
       if(this.game.input.keyboard.isDown(Phaser.Keyboard.H)){
         this.game.state.start('highscore');

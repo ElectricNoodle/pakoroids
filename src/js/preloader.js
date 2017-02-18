@@ -30,6 +30,9 @@
 
       this.load.image('background','assets/images/space.png');
 
+      this.load.image('arrows', 'assets/images/gui/keys.png');
+      this.load.image('space_bar', 'assets/images/gui/space.png');
+      
       // this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
       // this.loadResources();
 
