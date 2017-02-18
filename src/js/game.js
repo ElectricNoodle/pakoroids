@@ -85,7 +85,7 @@
 
         this.fisheye = new Phaser.Filter(this, null, this.cache.getShader('fisheye'));
         this.fisheye.setResolution(1024, 768);
-        this.world.filters = [this.fisheye]
+        this.world.filters = null
 
 
         this.pakoraCount = 0;
@@ -538,11 +538,13 @@
       body1.sprite.destroy();
       that.danPsychPowerUpCount--;
       that.have_dan_psych_powerup = true;
+      that.world.filters = [that.fisheye]
       if (that.danPowerUpTimer){
         that.game.time.events.remove(that.danPsychPowerUpTimer);
       }
       that.danPsychPowerUpTimer = that.game.time.events.add(Phaser.Timer.SECOND * 30, function(){
         that.have_dan_psych_powerup = false;
+        that.world.filters = null
       }, that);
 
     },
