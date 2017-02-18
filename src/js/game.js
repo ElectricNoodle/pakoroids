@@ -12,7 +12,7 @@
         this.game.UBOUNDX = 10000;
         this.game.UBOUNDY = 10000;
 
-        this.MAX_PAKORA_COUNT = 0;
+        this.MAX_PAKORA_COUNT = 500;
         this.MAX_POWERUP_COUNT = 100;
 
         this.game.physics.startSystem(Phaser.Physics.P2JS);
@@ -72,6 +72,7 @@
         this.powerUpCollisionGroup = this.game.physics.p2.createCollisionGroup();
         this.andyLifeCollisionGroup = this.game.physics.p2.createCollisionGroup();
         this.scrangleHerbCollisionGroup = this.game.physics.p2.createCollisionGroup();
+        this.psychedelicDanCollisonGroup = this.game.physics.p2.createCollisionGroup();
 
         this.pakoraDegradationMap = {
           "robpaklarge": "robpakmedium",
@@ -94,17 +95,20 @@
         this.game.time.events.loop(Phaser.Timer.SECOND, this.spawnPakoraTimed, this);
 
         this.powerUpCount = 0;
-        for(var i =0; i < 100; i++){
+        for(var i =0; i < 50; i++){
           this.spawnPowerUp();
         }
         this.game.time.events.loop(Phaser.Timer.SECOND * 4, this.spawnPowerUpTimed, this);
-
+        this.danPsychPowerUpCount = 0;
+        for(var i = 0; i < 50; i++){
+          this.spawnPowerUpPsych();
+        }
         this.lifePickupCount =0;
-        for(var i=0; i < 100; i++){
+        for(var i=0; i < 50; i++){
           this.spawnLifePickup();
         }
         this.scrangleHerbCount  = 0;
-        for(var i=0; i< 100; i++){
+        for(var i=0; i< 50; i++){
           this.spawnScrangleHerb();
         }
         this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -117,7 +121,7 @@
 
         this.ship = this.players.create(this.game.world.centerX, this.game.world.centerY, 'andy');
         this.ship.body.setCollisionGroup(this.playerCollisionGroup);
-        this.ship.body.collides([this.playerCollisionGroup, this.pakoraCollisionGroup,this.powerUpCollisionGroup,this.andyLifeCollisionGroup]);
+        this.ship.body.collides([this.playerCollisionGroup, this.pakoraCollisionGroup,this.powerUpCollisionGroup,this.andyLifeCollisionGroup,this.scrangleHerbCollisionGroup,this.psychedelicDanCollisonGroup]);
 
         this.game.physics.p2.enable(this.ship);
         this.ship.body.collidesWorldBounds = false;
@@ -150,12 +154,13 @@
           this.lifePickupText = this.game.add.text(140, 100, 'LifePickupCount: ' + this.lifePickupCount, { font: '16px Arial', fill: '#ffffff' } );
           this.scrangleHerbText = this.game.add.text(140, 120, 'scrangleHerbCount: ' + this.scrangleHerbCount, { font: '16px Arial', fill: '#ffffff' } );
           this.playerPosText = this.game.add.text(140, 140, 'PlayerPos: X:' + this.ship.position.x + ' Y:' +this.ship.position.y, { font: '16px Arial', fill: '#ffffff' } );
-
+          this.psychText = this.game.add.text(140, 160, 'PpsychCount: ' + this.danPsychPowerUpCount, { font: '16px Arial', fill: '#ffffff' } );
           this.pakoraCountText.fixedToCamera = true;
           this.powerupCountText.fixedToCamera = true;
           this.lifePickupText.fixedToCamera = true;
           this.scrangleHerbText.fixedToCamera = true;
           this.playerPosText.fixedToCamera = true;
+          this.psychText.fixedToCamera = true;
         }
         this.livesText = this.game.add.text( this.game.width - 140, 40, 'Lives: ', { font: '16px Arial', fill: '#ffffff' } );
         this.livesText.fixedToCamera = true;
@@ -171,8 +176,14 @@
         this.livesTexture4.fixedToCamera = true;
         this.livesTexture5.fixedToCamera = true;
 
+
+
+
         this.have_dan_powerup = false;
+        this.have_scrangle_herb = false;
         this.score = 0;
+        this.rotationSpeed = 100;
+        this.moveSpeed = 400;
         this.scoreText = this.game.add.text( 20, 40, 'Score: ' + this.score, { font: '16px Arial', fill: '#ffffff' } );
         this.scoreText.fixedToCamera = true;
 
@@ -186,6 +197,7 @@
         this.lifePickupText.setText('LifePickupCount: ' + this.lifePickupCount);
         this.scrangleHerbText.setText('scrangleHerbCount: ' + this.scrangleHerbCount);
         this.playerPosText.setText('PlayerPos: X: ' + parseInt(this.ship.position.x) + ' Y: ' +parseInt(this.ship.position.y));
+        this.psychText.setText('PsychCount: ' + this.danPsychPowerUpCount);
       }
 
       this.robsLarge.forEachAlive(this.moveBullets,this);  //make this.bullets accelerate to ship
@@ -193,16 +205,18 @@
       this.craigsSmall.forEachAlive(this.moveBullets,this);
       //this.background.tilePosition = this.game.camera.position;
       if (this.cursors.left.isDown) {
-        this.ship.body.rotateLeft(100);
+        this.ship.body.rotateLeft(this.rotationSpeed);
       }   //this.ship movement
       else if (this.cursors.right.isDown){
-        this.ship.body.rotateRight(100);}
+        this.ship.body.rotateRight(this.rotationSpeed);}
       else {
         this.ship.body.setZeroRotation();}
       if (this.cursors.up.isDown){
-        this.ship.body.thrust(400);}
+        this.ship.body.thrust(this.moveSpeed);
+      }
       else if (this.cursors.down.isDown){
-        this.ship.body.reverse(400);}
+        this.ship.body.reverse(this.moveSpeed);
+      }
 
       if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
         this.fireBullet();
@@ -267,7 +281,6 @@
       }
     },
     spawnPowerUp: function(){
-
       var dan= this.danPowerUp.create(this.game.rnd.integerInRange(this.game.LBOUNDX, this.game.UBOUNDX),
                                      this.game.rnd.integerInRange(this.game.LBOUNDY, this.game.UBOUNDY),'dandip');
       dan.body.setCollisionGroup(this.powerUpCollisionGroup);
@@ -288,10 +301,28 @@
       emitter.gravity = 0;
       emitter.flow(300, 66, 1, -1);
       emitter.emitParticle();
+    },
+    spawnPowerUpPsych: function() {
+      var dan= this.danPowerUp.create(this.game.rnd.integerInRange(this.game.LBOUNDX, this.game.UBOUNDX),
+                                     this.game.rnd.integerInRange(this.game.LBOUNDY, this.game.UBOUNDY),'danpsych');
+      dan.body.setCollisionGroup(this.psychedelicDanCollisonGroup);
+      dan.body.collides(this.playerCollisionGroup,this.handlePsychDanCollision);
+      dan.body.force.x = this.game.rnd.integerInRange(-10000,-10000);
+      dan.body.force.y = this.game.rnd.integerInRange(1000,5000);
+      this.game.physics.p2.enable(dan,true);
+      this.danPsychPowerUpCount++;
 
-
-
-
+      var emitter = this.game.add.emitter(0, 0, 50);
+      emitter.makeParticles('danpsych');
+      dan.addChild(emitter);
+      emitter.minParticleSpeed.setTo(-300, -300);
+      emitter.maxParticleSpeed.setTo(300, 300);
+      emitter.setAlpha(0, 0.7, -0.1)
+      emitter.minParticleScale = 0.1;
+      emitter.maxParticleScale = 0.6;
+      emitter.gravity = 0;
+      emitter.flow(300, 66, 1, -1);
+      emitter.emitParticle();
     },
     spawnLifePickup: function() {
       var lemon = this.andyLife.create(this.game.rnd.integerInRange(this.game.LBOUNDX, this.game.UBOUNDX),
@@ -318,8 +349,8 @@
     spawnScrangleHerb: function(){
       var scrangle = this.andyLife.create(this.game.rnd.integerInRange(this.game.LBOUNDX, this.game.UBOUNDX),
                                      this.game.rnd.integerInRange(this.game.LBOUNDY, this.game.UBOUNDY),'scrangleherb');
-      scrangle.body.setCollisionGroup(this.andyLifeCollisionGroup);
-      scrangle.body.collides(this.playerCollisionGroup,this.handleLifePickupCollision);
+      scrangle.body.setCollisionGroup(this.scrangleHerbCollisionGroup);
+      scrangle.body.collides(this.playerCollisionGroup,this.handleScrangleHerbCollision);
       scrangle.body.force.x = this.game.rnd.integerInRange(200,900);
       scrangle.body.force.y = this.game.rnd.integerInRange(200,900);
       this.game.physics.p2.enable(scrangle,true);
@@ -493,27 +524,47 @@
     },
     handlePowerUpCollision: function(body1,body2){
       body1.sprite.destroy();
+      that.powerUpCount--;
       that.have_dan_powerup = true;
       if (that.danPowerUpTimer){
-        that.game.time.events.remove(that.danPowerUpTimer)
+        that.game.time.events.remove(that.danPowerUpTimer);
       }
       that.danPowerUpTimer = that.game.time.events.add(Phaser.Timer.SECOND * 30, function(){
         that.have_dan_powerup = false;
       }, that);
 
     },
+    handlePsychDanCollision: function(body1,body2){
+      body1.sprite.destroy();
+      that.danPsychPowerUpCount--;
+      that.have_dan_psych_powerup = true;
+      if (that.danPowerUpTimer){
+        that.game.time.events.remove(that.danPsychPowerUpTimer);
+      }
+      that.danPsychPowerUpTimer = that.game.time.events.add(Phaser.Timer.SECOND * 30, function(){
+        that.have_dan_psych_powerup = false;
+      }, that);
+
+    },
     handleLifePickupCollision: function(body1,body2){
       body1.sprite.destroy();
+      that.lifePickupCount--;
       if(that.lives < 5){
         that.lives++;
       }
     },
     handleScrangleHerbCollision: function(body1,body2){
       body1.sprite.destroy();
-      console.log("got scrangle");
-      setTimeout(function(){
-        console.log("gone");
-      },30000);
+      that.scrangleHerbCount--;
+      that.have_scrangle_herb = true;
+      that.rotationSpeed += 100;
+      that.moveSpeed += 800;
+
+      that.game.time.events.add(Phaser.Timer.SECOND * 30, function(){
+        that.have_scrangle_herb = false;
+        that.rotationSpeed -= 100;
+        that.moveSpeed -= 800;
+      }, that);
     },
     startPowerUp: function (){
 

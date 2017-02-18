@@ -23,7 +23,6 @@
         textYPos += 50
       }
       text.anchor.set(0.5);
-      this.input.onDown.add(this.onDown, this);
     },
 
     update: function () {
@@ -33,9 +32,6 @@
         this.game.state.start('game');
       }
     },
-    onDown: function () {
-      this.game.state.start('menu');
-    }
   };
 
   window['pakoroids'] = window['pakoroids'] || {};
