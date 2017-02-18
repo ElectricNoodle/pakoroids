@@ -10,6 +10,7 @@
       });
       text.anchor.set(0.5);
       this.input.onDown.add(this.onDown, this);
+      console.log(this);
     },
 
     update: function () {

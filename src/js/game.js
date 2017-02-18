@@ -78,7 +78,7 @@
 
 
         this.pakoraCount = 0;
-        for (var i = 0; i < 50; i++) {
+        for (var i = 0; i < 500; i++) {
           this.spawnPakora();
         };
         this.game.time.events.loop(Phaser.Timer.SECOND, this.spawnPakoraTimed, this);
@@ -346,7 +346,10 @@
           that.lives = 0;
         }
           if(that.lives == 0){
-              that.handleDeath();
+              //that.game.physics.startSystem(Phaser.Physics.P2JS);
+              //that.game.state.start('menu');
+              console.log("SHOULD DIE HERE");
+              
           }else{
             that.lives--;
           }
@@ -382,10 +385,6 @@
       obj1.body.force.x = Math.cos(angle) * speed;    // accelerateToObject 
       obj1.body.force.y = Math.sin(angle) * speed;
     },
-    handleDeath: function () {
-      that.game.state.states['gameover'].score = this.score;
-      that.game.state.start('gameover');
-    }
   };
 
 
