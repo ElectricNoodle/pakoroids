@@ -5,11 +5,26 @@
 
   Menu.prototype = {
     create: function () {
+      this.background = this.game.add.tileSprite(this.game.LBOUNDX,this.game.LBOUNDY,1366,768, 'background');
       var text = this.add.text(this.game.width * 0.5, this.game.height * 0.5,
         'Pakoroids', {font: '72px Arial', fill: '#ffffff', align: 'center'
       });
+      text.font = 'Revalia'; 
+      var start_text = this.add.text(370,475,
+        'S - Start Game', {font: '30px Arial', fill: '#ffffff', align: 'center'
+      });
+      start_text.font = 'Revalia'; 
+      var controls_text = this.add.text(370,550,
+        'C - Controls', {font: '30px Arial', fill: '#ffffff', align: 'center'
+      });
+      controls_text.font = 'Revalia';
+      var scores_text = this.add.text(370, 625,
+        'H - Highscores', {font: '30px Arial', fill: '#ffffff', align: 'center'
+      });
+      scores_text.font = 'Revalia';
       text.anchor.set(0.5);
       this.input.onDown.add(this.onDown, this);
+
     },
 
     update: function () {
@@ -25,7 +40,8 @@
     },
 
     onDown: function () {
-    }
+    },
+
   };
 
   window['pakoroids'] = window['pakoroids'] || {};

@@ -32,10 +32,11 @@
 
       this.load.image('arrows', 'assets/images/gui/keys.png');
       this.load.image('space_bar', 'assets/images/gui/space.png');
-      
+
       // this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
       // this.loadResources();
-
+         //  Load the Google WebFont Loader script
+      this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
       this.ready = true;
     },
 
