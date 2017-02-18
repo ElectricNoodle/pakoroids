@@ -88,7 +88,7 @@
 
 
         this.pakoraCount = 0;
-        for (var i = 0; i < 500; i++) {
+        for (var i = 0; i < 300; i++) {
           this.spawnPakora();
         };
         this.game.time.events.loop(Phaser.Timer.SECOND, this.spawnPakoraTimed, this);
@@ -100,11 +100,11 @@
         this.game.time.events.loop(Phaser.Timer.SECOND * 4, this.spawnPowerUpTimed, this);
 
         this.lifePickupCount =0;
-        for(var i=0; i < 500; i++){
+        for(var i=0; i < 100; i++){
           this.spawnLifePickup();
         }
         this.scrangleHerbCount  = 0;
-        for(var i=0; i< 500; i++){
+        for(var i=0; i< 100; i++){
           this.spawnScrangleHerb();
         }
         this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -148,9 +148,9 @@
           this.pakoraCountText = this.game.add.text(140, 60, 'PakoraCount: ' + this.pakoraCount, { font: '16px Arial', fill: '#ffffff' } );
           this.powerupCountText = this.game.add.text(140, 80, 'PowerUpCount: ' + this.powerUpCount, { font: '16px Arial', fill: '#ffffff' } );
           this.lifePickupText = this.game.add.text(140, 100, 'LifePickupCount: ' + this.lifePickupCount, { font: '16px Arial', fill: '#ffffff' } );
-          this.scrangleHerbText = this.game.add.text(140, 120, 'scrangleHerbCount: ' + this.scrangleHerbCount, { font: '16px Arial', fill: '#ffffff' } );         
+          this.scrangleHerbText = this.game.add.text(140, 120, 'scrangleHerbCount: ' + this.scrangleHerbCount, { font: '16px Arial', fill: '#ffffff' } );
           this.playerPosText = this.game.add.text(140, 140, 'PlayerPos: X:' + this.ship.position.x + ' Y:' +this.ship.position.y, { font: '16px Arial', fill: '#ffffff' } );
-          
+
           this.pakoraCountText.fixedToCamera = true;
           this.powerupCountText.fixedToCamera = true;
           this.lifePickupText.fixedToCamera = true;
@@ -277,7 +277,7 @@
       this.game.physics.p2.enable(dan,true);
       this.powerUpCount++;
 
-      var emitter = this.game.add.emitter(0, 0, 100);
+      var emitter = this.game.add.emitter(0, 0, 50);
       emitter.makeParticles('dandip');
       dan.addChild(emitter);
       emitter.minParticleSpeed.setTo(-300, -300);
@@ -302,6 +302,18 @@
       lemon.body.force.y = this.game.rnd.integerInRange(200,900);
       this.game.physics.p2.enable(lemon,true);
       this.lifePickupCount++;
+
+      var emitter = this.game.add.emitter(0, 0, 50);
+      emitter.makeParticles('andy_lemon');
+      lemon.addChild(emitter);
+      emitter.minParticleSpeed.setTo(-300, -300);
+      emitter.maxParticleSpeed.setTo(300, 300);
+      emitter.setAlpha(0, 0.7, -0.1)
+      emitter.minParticleScale = 0.1;
+      emitter.maxParticleScale = 0.6;
+      emitter.gravity = 0;
+      emitter.flow(300, 66, 1, -1);
+      emitter.emitParticle();
     },
     spawnScrangleHerb: function(){
       var scrangle = this.andyLife.create(this.game.rnd.integerInRange(this.game.LBOUNDX, this.game.UBOUNDX),
@@ -312,6 +324,18 @@
       scrangle.body.force.y = this.game.rnd.integerInRange(200,900);
       this.game.physics.p2.enable(scrangle,true);
       this.scrangleHerbCount++;
+
+      var emitter = this.game.add.emitter(0, 0, 50);
+      emitter.makeParticles('scrangleherb');
+      scrangle.addChild(emitter);
+      emitter.minParticleSpeed.setTo(-300, -300);
+      emitter.maxParticleSpeed.setTo(300, 300);
+      emitter.setAlpha(0, 0.7, -0.1)
+      emitter.minParticleScale = 0.1;
+      emitter.maxParticleScale = 0.6;
+      emitter.gravity = 0;
+      emitter.flow(300, 66, 1, -1);
+      emitter.emitParticle();
     },
     fireBullet: function () {
 
@@ -406,7 +430,7 @@
           this.livesTexture1.visible = true;
           this.livesTexture2.visible = true;
           this.livesTexture3.visible = true;
-          this.livesTexture4.visible = true;       
+          this.livesTexture4.visible = true;
           this.livesTexture5.visible = false;
         break;
         case 5:
