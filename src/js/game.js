@@ -272,10 +272,25 @@
                                      this.game.rnd.integerInRange(this.game.LBOUNDY, this.game.UBOUNDY),'dandip');
       dan.body.setCollisionGroup(this.powerUpCollisionGroup);
       dan.body.collides(this.playerCollisionGroup,this.handlePowerUpCollision);
-      dan.body.force.x = this.game.rnd.integerInRange(200,900);
-      dan.body.force.y = this.game.rnd.integerInRange(200,900);
+      dan.body.force.x = this.game.rnd.integerInRange(-10000,-10000);
+      dan.body.force.y = this.game.rnd.integerInRange(1000,5000);
       this.game.physics.p2.enable(dan,true);
       this.powerUpCount++;
+
+      var emitter = this.game.add.emitter(0, 0, 100);
+      emitter.makeParticles('dandip');
+      dan.addChild(emitter);
+      emitter.minParticleSpeed.setTo(-300, -300);
+      emitter.maxParticleSpeed.setTo(300, 300);
+      emitter.setAlpha(0, 0.7, -0.1)
+      emitter.minParticleScale = 0.1;
+      emitter.maxParticleScale = 0.6;
+      emitter.gravity = 0;
+      emitter.flow(300, 66, 1, -1);
+      emitter.emitParticle();
+
+
+
 
     },
     spawnLifePickup: function() {
@@ -321,7 +336,7 @@
 
               bulletTwo.body.force.x = Math.cos(this.ship.rotation-1.581+0.2)*50000;
               bulletTwo.body.force.y = Math.sin(this.ship.rotation-1.581+0.2)*50000;
-             
+
           }
           var bulletThree = this.bullets.getFirstExists(false);
           if(bulletThree){
@@ -331,7 +346,7 @@
 
               bulletThree.body.force.x = Math.cos(this.ship.rotation-1.581-0.2)*50000;
               bulletThree.body.force.y = Math.sin(this.ship.rotation-1.581-0.2)*50000;
-             
+
           }
            this.bulletTime = this.game.time.now + 200;
         }else{
@@ -455,9 +470,13 @@
     handlePowerUpCollision: function(body1,body2){
       body1.sprite.destroy();
       that.have_dan_powerup = true;
-      setTimeout(function(){
+      if (that.danPowerUpTimer){
+        that.game.time.events.remove(that.danPowerUpTimer)
+      }
+      that.danPowerUpTimer = that.game.time.events.add(Phaser.Timer.SECOND * 30, function(){
         that.have_dan_powerup = false;
-      },30000);
+      }, that);
+
     },
     handleLifePickupCollision: function(body1,body2){
       body1.sprite.destroy();
