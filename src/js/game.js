@@ -84,7 +84,7 @@
 
         this.fisheye = new Phaser.Filter(this, null, this.cache.getShader('fisheye'));
         this.fisheye.setResolution(1024, 768);
-        //this.world.filters = [this.fisheye]
+        this.world.filters = [this.fisheye]
 
 
         this.pakoraCount = 0;

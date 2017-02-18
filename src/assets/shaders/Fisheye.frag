@@ -13,16 +13,15 @@ void main( void ) {
 
     vec2 centToFrag = uv - center;//vector from center to current fragment
     float r = sqrt(dot(centToFrag, centToFrag));
-        
+
     vec2 realCoordOffs;
 
 
 
-    realCoordOffs.x = (-4.0 * (vTextureCoord.x * vTextureCoord.x)) +  4.0 * vTextureCoord.x;
-    realCoordOffs.y = (-4.0 * (vTextureCoord.y * vTextureCoord.y)) +  4.0 * vTextureCoord.y;
-        
-    vec4 color = texture2D(uSampler, realCoordOffs);   
-    
+    realCoordOffs.x = ((0.3 * (vTextureCoord.x * vTextureCoord.x)) +  0.7 * vTextureCoord.x);
+    realCoordOffs.y = (0.3 * (vTextureCoord.y * vTextureCoord.y)) +  0.7 * vTextureCoord.y;
+
+    vec4 color = texture2D(uSampler, realCoordOffs);
+
     gl_FragColor = color;
 }
-
