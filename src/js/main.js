@@ -14,9 +14,22 @@ window.addEventListener('load', function () {
   /* yo phaser:state new-state-files-put-here */
   game.state.start('boot');
 }, false);
-/*
+
+var userToken = localStorage.getItem('user_token')
 var socket = io('http://localhost:9000');
-  socket.on('test', function (data) {
-    console.log(data);
+  socket.on('connected', function (token) {
+    if (!userToken){
+      console.log('Setting new userToken')
+      userToken = token
+      localStorage.setItem('user_token', token)
+    }
+    socket.emit('get-scores')
+    socket.emit('register', userToken, 'peter')
   });
-*/
+
+
+
+  socket.on('scores', function (scores) {
+    console.log(scores)
+    socket.emit('relay', 'peter', userToken, Math.floor(Math.random() * 10000))
+  })
