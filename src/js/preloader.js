@@ -11,6 +11,7 @@
       this.asset = this.add.sprite(this.game.width * 0.5 - 110, this.game.height * 0.5 - 10, 'preloader');
       this.load.setPreloadSprite(this.asset);
       this.load.image('andy', 'assets/images/pakora/small/andy-crinkle-cut-chip.png');
+      this.load.image('andy_lemon', 'assets/images/pakora/small/andrew-lemon-wedge.png');
       this.load.image('robpaklarge', 'assets/images/pakora/big/rob-pakosha_360.png');
       this.load.image('robpakmedium', 'assets/images/pakora/medium/rob-pakosha_360.png');
       this.load.image('robpaksmall', 'assets/images/pakora/small/rob-pakosha_360.png');
@@ -21,6 +22,7 @@
       this.load.image('craigsammedium', 'assets/images/pakora/medium/craig-samosa.png');
       this.load.image('craigsamsmall', 'assets/images/pakora/small/craig-samosa.png');
       this.load.image('dandip', 'assets/images/pakora/dan-dip-small.png');
+      this.load.image('scrangleherb', 'assets/images/pakora/scrangle-leaf_360.png');
 
       this.load.image('life', 'assets/images/gui/life.png');
       this.load.shader('fisheye', 'assets/shaders/Fisheye.frag');

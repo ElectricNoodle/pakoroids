@@ -13,7 +13,7 @@
         this.game.UBOUNDY = 10000;
 
         this.MAX_PAKORA_COUNT = 0;
-        this.MAX_POWERUP_COUNT = 1;
+        this.MAX_POWERUP_COUNT = 100;
 
         this.game.physics.startSystem(Phaser.Physics.P2JS);
         this.game.physics.p2.setImpactEvents(true);
@@ -58,10 +58,20 @@
         this.danPowerUp.enableBody = true;
         this.danPowerUp.physicsBodyType = Phaser.Physics.P2JS;
 
+        this.andyLife = this.game.add.group();
+        this.andyLife.enableBody =true;
+        this.andyLife.physicsBodyType = Phaser.Physics.P2JS;
+
+        this.scrangleHerb = this.game.add.group();
+        this.scrangleHerb.enableBody = true;
+        this.scrangleHerb.physicsBodyType = Phaser.Physics.P2JS;
+
         this.playerCollisionGroup = this.game.physics.p2.createCollisionGroup();
         this.pakoraCollisionGroup = this.game.physics.p2.createCollisionGroup();
         this.bulletCollisionGroup = this.game.physics.p2.createCollisionGroup();
         this.powerUpCollisionGroup = this.game.physics.p2.createCollisionGroup();
+        this.andyLifeCollisionGroup = this.game.physics.p2.createCollisionGroup();
+        this.scrangleHerbCollisionGroup = this.game.physics.p2.createCollisionGroup();
 
         this.pakoraDegradationMap = {
           "robpaklarge": "robpakmedium",
@@ -89,7 +99,14 @@
         }
         this.game.time.events.loop(Phaser.Timer.SECOND * 4, this.spawnPowerUpTimed, this);
 
-
+        this.lifePickupCount =0;
+        for(var i=0; i < 500; i++){
+          this.spawnLifePickup();
+        }
+        this.scrangleHerbCount  = 0;
+        for(var i=0; i< 500; i++){
+          this.spawnScrangleHerb();
+        }
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
 
@@ -100,7 +117,7 @@
 
         this.ship = this.players.create(this.game.world.centerX, this.game.world.centerY, 'andy');
         this.ship.body.setCollisionGroup(this.playerCollisionGroup);
-        this.ship.body.collides([this.playerCollisionGroup, this.pakoraCollisionGroup,this.powerUpCollisionGroup]);
+        this.ship.body.collides([this.playerCollisionGroup, this.pakoraCollisionGroup,this.powerUpCollisionGroup,this.andyLifeCollisionGroup]);
 
         this.game.physics.p2.enable(this.ship);
         this.ship.body.collidesWorldBounds = false;
@@ -130,9 +147,14 @@
         if(this.DEBUG){
           this.pakoraCountText = this.game.add.text(140, 60, 'PakoraCount: ' + this.pakoraCount, { font: '16px Arial', fill: '#ffffff' } );
           this.powerupCountText = this.game.add.text(140, 80, 'PowerUpCount: ' + this.powerUpCount, { font: '16px Arial', fill: '#ffffff' } );
-          this.playerPosText = this.game.add.text(140, 100, 'PlayerPos: X:' + this.ship.position.x + ' Y:' +this.ship.position.y, { font: '16px Arial', fill: '#ffffff' } );
+          this.lifePickupText = this.game.add.text(140, 100, 'LifePickupCount: ' + this.lifePickupCount, { font: '16px Arial', fill: '#ffffff' } );
+          this.scrangleHerbText = this.game.add.text(140, 120, 'scrangleHerbCount: ' + this.scrangleHerbCount, { font: '16px Arial', fill: '#ffffff' } );         
+          this.playerPosText = this.game.add.text(140, 140, 'PlayerPos: X:' + this.ship.position.x + ' Y:' +this.ship.position.y, { font: '16px Arial', fill: '#ffffff' } );
+          
           this.pakoraCountText.fixedToCamera = true;
           this.powerupCountText.fixedToCamera = true;
+          this.lifePickupText.fixedToCamera = true;
+          this.scrangleHerbText.fixedToCamera = true;
           this.playerPosText.fixedToCamera = true;
         }
         this.livesText = this.game.add.text( this.game.width - 140, 40, 'Lives: ', { font: '16px Arial', fill: '#ffffff' } );
@@ -141,9 +163,13 @@
         this.livesTexture1 = this.game.add.sprite(this.game.width - 90,30,'life');
         this.livesTexture2 = this.game.add.sprite(this.game.width - 75,30,'life');
         this.livesTexture3 = this.game.add.sprite(this.game.width - 60,30,'life');
+        this.livesTexture4 = this.game.add.sprite(this.game.width - 45,30,'life');
+        this.livesTexture5 = this.game.add.sprite(this.game.width - 30,30,'life');
         this.livesTexture1.fixedToCamera = true;
         this.livesTexture2.fixedToCamera = true;
         this.livesTexture3.fixedToCamera = true;
+        this.livesTexture4.fixedToCamera = true;
+        this.livesTexture5.fixedToCamera = true;
 
         this.have_dan_powerup = false;
         this.score = 0;
@@ -157,7 +183,9 @@
       if(this.DEBUG){
         this.pakoraCountText.setText('PakoraCount: ' + this.pakoraCount);
         this.powerupCountText.setText('PowerUpCount: ' + this.powerUpCount);
-        this.playerPosText.setText('PlayerPos: X:' + parseInt(this.ship.position.x) + ' Y:' +parseInt(this.ship.position.y));
+        this.lifePickupText.setText('LifePickupCount: ' + this.lifePickupCount);
+        this.scrangleHerbText.setText('scrangleHerbCount: ' + this.scrangleHerbCount);
+        this.playerPosText.setText('PlayerPos: X: ' + parseInt(this.ship.position.x) + ' Y: ' +parseInt(this.ship.position.y));
       }
 
       this.robsLarge.forEachAlive(this.moveBullets,this);  //make this.bullets accelerate to ship
@@ -250,6 +278,26 @@
       this.powerUpCount++;
 
     },
+    spawnLifePickup: function() {
+      var lemon = this.andyLife.create(this.game.rnd.integerInRange(this.game.LBOUNDX, this.game.UBOUNDX),
+                                     this.game.rnd.integerInRange(this.game.LBOUNDY, this.game.UBOUNDY),'andy_lemon');
+      lemon.body.setCollisionGroup(this.andyLifeCollisionGroup);
+      lemon.body.collides(this.playerCollisionGroup,this.handleLifePickupCollision);
+      lemon.body.force.x = this.game.rnd.integerInRange(200,900);
+      lemon.body.force.y = this.game.rnd.integerInRange(200,900);
+      this.game.physics.p2.enable(lemon,true);
+      this.lifePickupCount++;
+    },
+    spawnScrangleHerb: function(){
+      var scrangle = this.andyLife.create(this.game.rnd.integerInRange(this.game.LBOUNDX, this.game.UBOUNDX),
+                                     this.game.rnd.integerInRange(this.game.LBOUNDY, this.game.UBOUNDY),'scrangleherb');
+      scrangle.body.setCollisionGroup(this.andyLifeCollisionGroup);
+      scrangle.body.collides(this.playerCollisionGroup,this.handleLifePickupCollision);
+      scrangle.body.force.x = this.game.rnd.integerInRange(200,900);
+      scrangle.body.force.y = this.game.rnd.integerInRange(200,900);
+      this.game.physics.p2.enable(scrangle,true);
+      this.scrangleHerbCount++;
+    },
     fireBullet: function () {
 
       if (this.game.time.now > this.bulletTime)
@@ -313,18 +361,46 @@
       switch(this.lives){
         case 0:
           this.livesTexture1.visible = false;
+          this.livesTexture2.visible = false;
+          this.livesTexture3.visible = false;
+          this.livesTexture4.visible = false;
+          this.livesTexture5.visible = false;
           break;
         case 1:
+          this.livesTexture1.visible = true;
           this.livesTexture2.visible = false;
+          this.livesTexture3.visible = false;
+          this.livesTexture4.visible = false;
+          this.livesTexture5.visible = false;
           break;
         case 2:
+          this.livesTexture1.visible = true;
+          this.livesTexture2.visible = true;
           this.livesTexture3.visible = false;
+          this.livesTexture4.visible = false;
+          this.livesTexture5.visible = false;
           break;
         case 3:
           this.livesTexture1.visible = true;
           this.livesTexture2.visible = true;
           this.livesTexture3.visible = true;
+          this.livesTexture4.visible = false;
+          this.livesTexture5.visible = false;
           break;
+        case 4:
+          this.livesTexture1.visible = true;
+          this.livesTexture2.visible = true;
+          this.livesTexture3.visible = true;
+          this.livesTexture4.visible = true;       
+          this.livesTexture5.visible = false;
+        break;
+        case 5:
+          this.livesTexture1.visible = true;
+          this.livesTexture2.visible = true;
+          this.livesTexture3.visible = true;
+          this.livesTexture4.visible = true;
+          this.livesTexture5.visible = true;
+        break;
       }
     },
 
@@ -375,7 +451,7 @@
           }else{
             that.lives--;
           }
-        },
+    },
     handlePowerUpCollision: function(body1,body2){
       body1.sprite.destroy();
       that.have_dan_powerup = true;
@@ -383,10 +459,22 @@
         that.have_dan_powerup = false;
       },30000);
     },
+    handleLifePickupCollision: function(body1,body2){
+      body1.sprite.destroy();
+      if(that.lives < 5){
+        that.lives++;
+      }
+    },
+    handleScrangleHerbCollision: function(body1,body2){
+      body1.sprite.destroy();
+      console.log("got scrangle");
+      setTimeout(function(){
+        console.log("gone");
+      },30000);
+    },
     startPowerUp: function (){
 
     },
-
     moveBullets: function (bullet) {
       var speed = 0;
       switch (bullet.width){
