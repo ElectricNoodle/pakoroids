@@ -7,6 +7,8 @@ uniform sampler2D uSampler;
 
 
 void main( void ) {
+    float amplitude = (sin(time/2.0)/ 0.5)+0.5;
+
     vec2 uv = vTextureCoord.xy / resolution.xy;
     float aspectRatio = resolution.x / resolution.y;
     vec2 center = vec2(0.5, 0.5 / aspectRatio);
@@ -18,8 +20,8 @@ void main( void ) {
 
 
 
-    realCoordOffs.x = ((0.3 * (vTextureCoord.x * vTextureCoord.x)) +  0.7 * vTextureCoord.x);
-    realCoordOffs.y = (0.3 * (vTextureCoord.y * vTextureCoord.y)) +  0.7 * vTextureCoord.y;
+    realCoordOffs.x = ((0.3 * (vTextureCoord.x * vTextureCoord.x) * sin(amplitude)*0.3 - cos(amplitude)*0.13) + 0.14 +  0.7 * vTextureCoord.x);
+    realCoordOffs.y = ((0.3 * (vTextureCoord.y * vTextureCoord.y) * cos(amplitude)*0.3 - sin(amplitude)*0.15) + 0.1 + 0.7 * vTextureCoord.y);
 
     vec4 color = texture2D(uSampler, realCoordOffs);
 
