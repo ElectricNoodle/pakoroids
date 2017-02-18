@@ -5,7 +5,7 @@
 
   Highscore.prototype = {
     create: function () {
-      this.background = this.game.add.tileSprite(this.game.LBOUNDX,this.game.LBOUNDY,1366,768, 'background');
+      this.background = this.game.add.tileSprite(0, 0,1366,768, 'background');
       var text = this.add.text(this.game.width * 0.5, 60,
         'Highscores', {font: '42px Revalia', fill: '#ffffff', align: 'center'
       });
