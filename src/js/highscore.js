@@ -8,6 +8,7 @@
       var text = this.add.text(this.game.width * 0.5, this.game.height * 0.5,
         'I\'m a highscore table', {font: '72px Arial', fill: '#ffffff', align: 'center'
       });
+      console.log('highscores', window.scores)
       text.anchor.set(0.5);
       this.input.onDown.add(this.onDown, this);
     },
