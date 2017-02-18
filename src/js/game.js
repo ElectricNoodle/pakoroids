@@ -346,7 +346,7 @@
           that.lives = 0;
         }
           if(that.lives == 0){
-              console.log("YOU DEAD");
+              that.handleDeath();
           }else{
             that.lives--;
           }
@@ -381,6 +381,10 @@
       obj1.body.rotation = angle + this.game.math.degToRad(90);  // correct angle of angry this.bullets (depends on the sprite used)
       obj1.body.force.x = Math.cos(angle) * speed;    // accelerateToObject 
       obj1.body.force.y = Math.sin(angle) * speed;
+    },
+    handleDeath: function () {
+      that.game.state.states['gameover'].score = this.score;
+      that.game.state.start('gameover');
     }
   };
 

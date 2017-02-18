@@ -19,6 +19,8 @@
         this.game.state.start('game');
       }else if(this.game.input.keyboard.isDown(Phaser.Keyboard.H)){
         this.game.state.start('highscore');
+      }else if(this.game.input.keyboard.isDown(Phaser.Keyboard.G)){
+        this.game.state.start('gameover');
       }
     },
 
