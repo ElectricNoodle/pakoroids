@@ -8,6 +8,7 @@
       this.score = score
     },
     create: function (score) {
+      var that = this
       var name = window.localStorage.getItem('user_name')
       if (!name) {
         var name = "123123123123123"
@@ -27,9 +28,9 @@
           userToken = token
           localStorage.setItem('user_token', token)
         }
-        socket.emit('get-scores')
         socket.emit('register', userToken, name)
-        socket.emit('relay', name, userToken, this.score)
+        socket.emit('relay', name, userToken, that.score)
+        socket.emit('get-scores')
       });
 
       socket.on('scores', function (scores) {

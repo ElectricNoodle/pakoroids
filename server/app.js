@@ -86,7 +86,7 @@ io.on('connection', function (socket) {
 
   socket.on('relay', function (username, token, score) {
     console.log(users[username], token)
-    if (users[username] === token) {
+    if (users[username] === token && Number.isInteger(score)) {
       scores.push({username: username, score: score})
     }
 
