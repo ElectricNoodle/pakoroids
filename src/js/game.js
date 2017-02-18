@@ -162,8 +162,9 @@
           this.playerPosText.fixedToCamera = true;
           this.psychText.fixedToCamera = true;
         }
-        this.livesText = this.game.add.text( this.game.width - 140, 40, 'Lives: ', { font: '16px Arial', fill: '#ffffff' } );
+        this.livesText = this.game.add.text( this.game.width - 170, 40, 'Lives: ', { font: '16px Arial', fill: '#ffffff' } );
         this.livesText.fixedToCamera = true;
+        this.livesText.font = 'Revalia';
         this.lives = 3;
         this.livesTexture1 = this.game.add.sprite(this.game.width - 90,30,'life');
         this.livesTexture2 = this.game.add.sprite(this.game.width - 75,30,'life');
@@ -176,8 +177,28 @@
         this.livesTexture4.fixedToCamera = true;
         this.livesTexture5.fixedToCamera = true;
 
+        this.powerUpText = this.game.add.text(this.game.width- 405, 40, 'Powerups: ',{ font: '16px Arial', fill: '#ffffff' } );
+        this.powerUpText.fixedToCamera = true;
+        this.powerUpText.font= 'Revalia';
 
+        this.scrangleActiveTexture = this.game.add.sprite(this.game.width - 290, 40,'scrangleherb');
+        this.scrangleActiveTexture.scale.x =0.8;
+        this.scrangleActiveTexture.scale.y =0.8;
 
+        this.danDipActiveTexture = this.game.add.sprite(this.game.width - 259, 40,'dandip');
+        this.danDipActiveTexture.scale.x =0.5;
+        this.danDipActiveTexture.scale.y =0.5;
+
+        this.psychDanDipActiveTexture = this.game.add.sprite(this.game.width - 220, 40,'danpsych');
+        this.psychDanDipActiveTexture.scale.x =0.5;
+        this.psychDanDipActiveTexture.scale.y =0.5;
+
+        this.scrangleActiveTexture.fixedToCamera = true;
+        this.scrangleActiveTexture.visible = false;
+        this.danDipActiveTexture.visible = false;
+        this.danDipActiveTexture.fixedToCamera = true;
+        this.psychDanDipActiveTexture.visible = false;
+        this.psychDanDipActiveTexture.fixedToCamera = true;
 
         this.have_dan_powerup = false;
         this.have_scrangle_herb = false;
@@ -185,6 +206,7 @@
         this.rotationSpeed = 100;
         this.moveSpeed = 400;
         this.scoreText = this.game.add.text( 20, 40, 'Score: ' + this.score, { font: '16px Arial', fill: '#ffffff' } );
+        this.scoreText.font = 'Revalia';
         this.scoreText.fixedToCamera = true;
 
         //this.game.physics.p2.updateBoundsCollisionGroup();
@@ -526,11 +548,13 @@
       body1.sprite.destroy();
       that.powerUpCount--;
       that.have_dan_powerup = true;
+      that.danDipActiveTexture.visible = true;
       if (that.danPowerUpTimer){
         that.game.time.events.remove(that.danPowerUpTimer);
       }
       that.danPowerUpTimer = that.game.time.events.add(Phaser.Timer.SECOND * 30, function(){
         that.have_dan_powerup = false;
+        that.danDipActiveTexture.visible = false;
       }, that);
 
     },
@@ -538,12 +562,14 @@
       body1.sprite.destroy();
       that.danPsychPowerUpCount--;
       that.have_dan_psych_powerup = true;
+      that.psychDanDipActiveTexture.visible = true;
       that.world.filters = [that.fisheye]
       if (that.danPowerUpTimer){
         that.game.time.events.remove(that.danPsychPowerUpTimer);
       }
       that.danPsychPowerUpTimer = that.game.time.events.add(Phaser.Timer.SECOND * 30, function(){
         that.have_dan_psych_powerup = false;
+        that.psychDanDipActiveTexture.visible = false;
         that.world.filters = null
       }, that);
 
@@ -559,11 +585,13 @@
       body1.sprite.destroy();
       that.scrangleHerbCount--;
       that.have_scrangle_herb = true;
+      that.scrangleActiveTexture.visible = true;
       that.rotationSpeed += 100;
       that.moveSpeed += 800;
 
       that.game.time.events.add(Phaser.Timer.SECOND * 30, function(){
         that.have_scrangle_herb = false;
+        that.psychDanDipActiveTexture.visible = false;
         that.rotationSpeed -= 100;
         that.moveSpeed -= 800;
       }, that);
