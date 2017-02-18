@@ -13,11 +13,16 @@
     },
 
     update: function () {
-
+      if(this.game.input.keyboard.isDown(Phaser.Keyboard.C)){
+        this.game.state.start('controls');
+      }else if(this.game.input.keyboard.isDown(Phaser.Keyboard.S)){
+        this.game.state.start('game');
+      }else if(this.game.input.keyboard.isDown(Phaser.Keyboard.H)){
+        this.game.state.start('highscore');
+      }
     },
 
     onDown: function () {
-      this.game.state.start('game');
     }
   };
 
