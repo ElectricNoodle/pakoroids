@@ -88,7 +88,7 @@
 
 
         this.pakoraCount = 0;
-        for (var i = 0; i < 500; i++) {
+        for (var i = 0; i < 300; i++) {
           this.spawnPakora();
         };
         this.game.time.events.loop(Phaser.Timer.SECOND, this.spawnPakoraTimed, this);
@@ -100,11 +100,11 @@
         this.game.time.events.loop(Phaser.Timer.SECOND * 4, this.spawnPowerUpTimed, this);
 
         this.lifePickupCount =0;
-        for(var i=0; i < 500; i++){
+        for(var i=0; i < 100; i++){
           this.spawnLifePickup();
         }
         this.scrangleHerbCount  = 0;
-        for(var i=0; i< 500; i++){
+        for(var i=0; i< 100; i++){
           this.spawnScrangleHerb();
         }
         this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -117,7 +117,7 @@
 
         this.ship = this.players.create(this.game.world.centerX, this.game.world.centerY, 'andy');
         this.ship.body.setCollisionGroup(this.playerCollisionGroup);
-        this.ship.body.collides([this.playerCollisionGroup, this.pakoraCollisionGroup,this.powerUpCollisionGroup,this.andyLifeCollisionGroup]);
+        this.ship.body.collides([this.playerCollisionGroup, this.pakoraCollisionGroup,this.powerUpCollisionGroup,this.andyLifeCollisionGroup,this.scrangleHerbCollisionGroup]);
 
         this.game.physics.p2.enable(this.ship);
         this.ship.body.collidesWorldBounds = false;
@@ -171,8 +171,14 @@
         this.livesTexture4.fixedToCamera = true;
         this.livesTexture5.fixedToCamera = true;
 
+
+
+
         this.have_dan_powerup = false;
+        this.have_scrangle_herb = false;
         this.score = 0;
+        this.rotationSpeed = 100;
+        this.moveSpeed = 400;
         this.scoreText = this.game.add.text( 20, 40, 'Score: ' + this.score, { font: '16px Arial', fill: '#ffffff' } );
         this.scoreText.fixedToCamera = true;
 
@@ -193,16 +199,18 @@
       this.craigsSmall.forEachAlive(this.moveBullets,this);
       //this.background.tilePosition = this.game.camera.position;
       if (this.cursors.left.isDown) {
-        this.ship.body.rotateLeft(100);
+        this.ship.body.rotateLeft(this.rotationSpeed);
       }   //this.ship movement
       else if (this.cursors.right.isDown){
-        this.ship.body.rotateRight(100);}
+        this.ship.body.rotateRight(this.rotationSpeed);}
       else {
         this.ship.body.setZeroRotation();}
       if (this.cursors.up.isDown){
-        this.ship.body.thrust(400);}
+        this.ship.body.thrust(this.moveSpeed);
+      }
       else if (this.cursors.down.isDown){
-        this.ship.body.reverse(400);}
+        this.ship.body.reverse(this.moveSpeed);
+      }
 
       if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
         this.fireBullet();
@@ -306,8 +314,8 @@
     spawnScrangleHerb: function(){
       var scrangle = this.andyLife.create(this.game.rnd.integerInRange(this.game.LBOUNDX, this.game.UBOUNDX),
                                      this.game.rnd.integerInRange(this.game.LBOUNDY, this.game.UBOUNDY),'scrangleherb');
-      scrangle.body.setCollisionGroup(this.andyLifeCollisionGroup);
-      scrangle.body.collides(this.playerCollisionGroup,this.handleLifePickupCollision);
+      scrangle.body.setCollisionGroup(this.scrangleHerbCollisionGroup);
+      scrangle.body.collides(this.playerCollisionGroup,this.handleScrangleHerbCollision);
       scrangle.body.force.x = this.game.rnd.integerInRange(200,900);
       scrangle.body.force.y = this.game.rnd.integerInRange(200,900);
       this.game.physics.p2.enable(scrangle,true);
@@ -471,7 +479,7 @@
       body1.sprite.destroy();
       that.have_dan_powerup = true;
       if (that.danPowerUpTimer){
-        that.game.time.events.remove(that.danPowerUpTimer)
+        that.game.time.events.remove(that.danPowerUpTimer);
       }
       that.danPowerUpTimer = that.game.time.events.add(Phaser.Timer.SECOND * 30, function(){
         that.have_dan_powerup = false;
@@ -486,10 +494,15 @@
     },
     handleScrangleHerbCollision: function(body1,body2){
       body1.sprite.destroy();
-      console.log("got scrangle");
-      setTimeout(function(){
-        console.log("gone");
-      },30000);
+      that.have_scrangle_herb = true;
+      that.rotationSpeed += 100;
+      that.moveSpeed += 800;
+
+      that.game.time.events.add(Phaser.Timer.SECOND * 30, function(){
+        that.have_scrangle_herb = false;
+        that.rotationSpeed -= 100;
+        that.moveSpeed -= 800;
+      }, that);
     },
     startPowerUp: function (){
 
