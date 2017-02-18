@@ -57,10 +57,12 @@
         this.danPowerUp = this.game.add.group();
         this.danPowerUp.enableBody = true;
         this.danPowerUp.physicsBodyType = Phaser.Physics.P2JS;
+        
 
         this.andyLife = this.game.add.group();
         this.andyLife.enableBody =true;
         this.andyLife.physicsBodyType = Phaser.Physics.P2JS;
+
 
         this.scrangleHerb = this.game.add.group();
         this.scrangleHerb.enableBody = true;
@@ -309,6 +311,7 @@
       dan.body.collides(this.playerCollisionGroup,this.handlePowerUpCollision);
       dan.body.force.x = this.game.rnd.integerInRange(-10000,-10000);
       dan.body.force.y = this.game.rnd.integerInRange(1000,5000);
+      dan.body.mass = 1;
       this.game.physics.p2.enable(dan,true);
       this.powerUpCount++;
 
@@ -331,6 +334,7 @@
       dan.body.collides(this.playerCollisionGroup,this.handlePsychDanCollision);
       dan.body.force.x = this.game.rnd.integerInRange(-10000,-10000);
       dan.body.force.y = this.game.rnd.integerInRange(1000,5000);
+      dan.body.mass = 1;
       this.game.physics.p2.enable(dan,true);
       this.danPsychPowerUpCount++;
 
@@ -353,6 +357,7 @@
       lemon.body.collides(this.playerCollisionGroup,this.handleLifePickupCollision);
       lemon.body.force.x = this.game.rnd.integerInRange(200,900);
       lemon.body.force.y = this.game.rnd.integerInRange(200,900);
+      lemon.body.mass = 1;
       this.game.physics.p2.enable(lemon,true);
       this.lifePickupCount++;
 
@@ -375,6 +380,7 @@
       scrangle.body.collides(this.playerCollisionGroup,this.handleScrangleHerbCollision);
       scrangle.body.force.x = this.game.rnd.integerInRange(200,900);
       scrangle.body.force.y = this.game.rnd.integerInRange(200,900);
+      scrangle.body.mass = 1;
       this.game.physics.p2.enable(scrangle,true);
       this.scrangleHerbCount++;
 
