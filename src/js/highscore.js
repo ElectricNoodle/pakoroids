@@ -6,9 +6,18 @@
   Highscore.prototype = {
     create: function () {
       this.background = this.game.add.tileSprite(this.game.LBOUNDX,this.game.LBOUNDY,1366,768, 'background');
-      var text = this.add.text(this.game.width * 0.5, this.game.height * 0.5,
-        'I\'m a highscore table', {font: '72px Arial', fill: '#ffffff', align: 'center'
+      var text = this.add.text(this.game.width * 0.5, 20,
+        'Highscores', {font: '42px VT323', fill: '#ffffff', align: 'center'
       });
+
+      var textYPos = 40
+
+      for (var i = 0; i < window.scores.length; i++) {
+        var score = window.scores[i]
+        this.add.text(this.game.width * 0.3, textYPos, score.username, {font: '42px VT323', fill: '#ffffff', align: 'left'})
+        this.add.text(this.game.width * 0.6, textYPos, score.score, {font: '42px VT323', fill: '#ffffff', align: 'left'})
+        textYPos += 40
+      }
       text.anchor.set(0.5);
       this.input.onDown.add(this.onDown, this);
     },

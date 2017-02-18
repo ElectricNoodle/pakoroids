@@ -9,11 +9,11 @@
       var text = this.add.text(this.game.width * 0.5, this.game.height * 0.5,
         'Pakoroids', {font: '72px Arial', fill: '#ffffff', align: 'center'
       });
-      text.font = 'Revalia'; 
+      text.font = 'Revalia';
       var start_text = this.add.text(370,475,
         'S - Start Game', {font: '30px Arial', fill: '#ffffff', align: 'center'
       });
-      start_text.font = 'Revalia'; 
+      start_text.font = 'Revalia';
       var controls_text = this.add.text(370,550,
         'C - Controls', {font: '30px Arial', fill: '#ffffff', align: 'center'
       });
@@ -25,6 +25,15 @@
       text.anchor.set(0.5);
       this.input.onDown.add(this.onDown, this);
 
+      var socket = io('http://localhost:9000');
+      socket.on('connected', function (token) {
+        socket.emit('get-scores')
+      });
+
+      socket.on('scores', function (scores) {
+        window.scores = scores
+        socket.close()
+      })
     },
 
     update: function () {

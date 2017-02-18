@@ -368,9 +368,8 @@
           that.lives = 0;
         }
           if(that.lives == 0){
-              //that.game.physics.startSystem(Phaser.Physics.P2JS);
               console.log("SHOULD DIE HERE");
-              that.game.state.start('gameover');
+              that.game.state.start('gameover', true, false, that.score);
 
 
           }else{
