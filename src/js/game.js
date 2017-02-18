@@ -245,7 +245,7 @@
       dan.body.collides(this.playerCollisionGroup,this.handlePowerUpCollision);
       dan.body.force.x = this.game.rnd.integerInRange(200,500);
       dan.body.force.y = this.game.rnd.integerInRange(200,500);
-      this.game.physics.p2.enable(dan,false);
+      this.game.physics.p2.enable(dan,true);
       this.powerUpCount++;
       /**
       var trail = this.game.add.emitter(0, 0, 1000);
