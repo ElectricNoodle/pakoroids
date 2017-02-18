@@ -100,7 +100,7 @@
 
         this.ship = this.players.create(this.game.world.centerX, this.game.world.centerY, 'andy');
         this.ship.body.setCollisionGroup(this.playerCollisionGroup);
-        this.ship.body.collides([this.playerCollisionGroup, this.pakoraCollisionGroup]);
+        this.ship.body.collides([this.playerCollisionGroup, this.pakoraCollisionGroup,this.powerUpCollisionGroup]);
 
         this.game.physics.p2.enable(this.ship);
         this.ship.body.collidesWorldBounds = false;
@@ -145,6 +145,7 @@
         this.livesTexture2.fixedToCamera = true;
         this.livesTexture3.fixedToCamera = true;
 
+        this.have_dan_powerup = false;
         this.score = 0;
         this.scoreText = this.game.add.text( 20, 40, 'Score: ' + this.score, { font: '16px Arial', fill: '#ffffff' } );
         this.scoreText.fixedToCamera = true;
@@ -262,11 +263,45 @@
 
 
 
+
     },
     fireBullet: function () {
 
       if (this.game.time.now > this.bulletTime)
       {
+        if(this.have_dan_powerup){
+          var bulletOne = this.bullets.getFirstExists(false);
+
+          if (bulletOne)
+          {
+              bulletOne.reset(this.ship.body.x-(Math.sin(this.ship.rotation)*(-40)), this.ship.body.y+(Math.sin(this.ship.rotation+1.581)*(-40)));
+              bulletOne.lifespan = 2000;
+              bulletOne.rotation = this.ship.rotation;
+              bulletOne.body.force.x = Math.cos(this.ship.rotation-1.581)*50000;
+              bulletOne.body.force.y = Math.sin(this.ship.rotation-1.581)*50000;
+          }
+          var bulletTwo = this.bullets.getFirstExists(false);
+          if(bulletTwo){
+              bulletTwo.reset(this.ship.body.x-(Math.sin(this.ship.rotation)*(-20)), this.ship.body.y+(Math.sin(this.ship.rotation+1.581)*(-40)));
+              bulletTwo.lifespan = 2000;
+              bulletTwo.rotation = this.ship.rotation;
+
+              bulletTwo.body.force.x = Math.cos(this.ship.rotation-1.581+0.2)*50000;
+              bulletTwo.body.force.y = Math.sin(this.ship.rotation-1.581+0.2)*50000;
+
+          }
+          var bulletThree = this.bullets.getFirstExists(false);
+          if(bulletThree){
+              bulletThree.reset(this.ship.body.x-(Math.sin(this.ship.rotation)*(-20)), this.ship.body.y+(Math.sin(this.ship.rotation+1.581)*(-40)));
+              bulletThree.lifespan = 2000;
+              bulletThree.rotation = this.ship.rotation;
+
+              bulletThree.body.force.x = Math.cos(this.ship.rotation-1.581-0.2)*50000;
+              bulletThree.body.force.y = Math.sin(this.ship.rotation-1.581-0.2)*50000;
+
+          }
+           this.bulletTime = this.game.time.now + 200;
+        }else{
           var bullet = this.bullets.getFirstExists(false);
 
           if (bullet)
@@ -276,8 +311,10 @@
               bullet.rotation = this.ship.rotation;
               bullet.body.force.x = Math.cos(this.ship.rotation-1.581)*50000;
               bullet.body.force.y = Math.sin(this.ship.rotation-1.581)*50000;
-              this.bulletTime = this.game.time.now + 50;
+              this.bulletTime = this.game.time.now + 200;
           }
+        }
+
       }
 
     },
@@ -310,7 +347,7 @@
       //body2.sprite.destroy();
       //body2.destroy();
       body2.reset();
-      console.log(body1, body2);
+
       var origX = body1.x;
       var origY = body1.y;
       var forceX = body1.force.x;
@@ -355,10 +392,15 @@
           }
         },
     handlePowerUpCollision: function(body1,body2){
-      console.log("WOO");
       body1.sprite.destroy();
+      that.have_dan_powerup = true;
+      setTimeout(function(){
+        that.have_dan_powerup = false;
+      },30000);
     },
+    startPowerUp: function (){
 
+    },
 
     moveBullets: function (bullet) {
       var speed = 0;
