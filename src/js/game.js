@@ -22,6 +22,7 @@
 
         this.game.world.setBounds(this.game.LBOUNDX,this.game.LBOUNDY,this.game.UBOUNDX,this.game.UBOUNDY);
         this.background = this.game.add.tileSprite(this.game.LBOUNDX,this.game.LBOUNDY,this.game.UBOUNDX,this.game.UBOUNDY, 'background');
+        
         this.players = this.game.add.group();
         this.robsLarge = this.game.add.group();
         this.rickysLarge = this.game.add.group();
@@ -98,8 +99,8 @@
         this.players.physicsBodyType = Phaser.Physics.P2JS;
 
         this.ship = this.players.create(this.game.world.centerX, this.game.world.centerY, 'andy');
-        this.ship.body.setCollisionGroup(this.playerCollisionGroup)
-        this.ship.body.collides([this.playerCollisionGroup, this.pakoraCollisionGroup])
+        this.ship.body.setCollisionGroup(this.playerCollisionGroup);
+        this.ship.body.collides([this.playerCollisionGroup, this.pakoraCollisionGroup]);
 
         this.game.physics.p2.enable(this.ship);
         this.ship.body.collidesWorldBounds = false;
@@ -177,7 +178,8 @@
         this.ship.body.reverse(400);}
 
       if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
-        this.fireBullet();}
+        this.fireBullet();
+      }
 
 
       this.game.world.wrap(this.ship);
@@ -343,7 +345,7 @@
         if(that.lives < 0){
           that.lives = 0;
         }
-          if(that.lives < 0){
+          if(that.lives == 0){
               console.log("YOU DEAD");
           }else{
             that.lives--;
