@@ -6,8 +6,8 @@
   Menu.prototype = {
     create: function () {
       this.background = this.game.add.tileSprite(this.game.LBOUNDX,this.game.LBOUNDY,1366,768, 'background');
-      var text = this.add.text(this.game.width * 0.5, this.game.height * 0.5,
-        'Pakoroids', {font: '72px Arial', fill: '#ffffff', align: 'center'
+      var text = this.add.text(this.game.width * 0.5, 220,
+        'Pakoroids', {font: '125px Arial', fill: '#ffffff', align: 'center'
       });
       text.font = 'Revalia';
       var start_text = this.add.text(370,475,

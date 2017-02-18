@@ -9,6 +9,7 @@
     },
     create: function (score) {
       var that = this
+      this.background = this.game.add.tileSprite(this.game.LBOUNDX,this.game.LBOUNDY,1366,768, 'background');
       var name = window.localStorage.getItem('user_name')
       if (!name) {
         var name = "123123123123123"
@@ -36,13 +37,17 @@
       socket.on('scores', function (scores) {
         window.scores = scores
       })
-      this.background = this.game.add.tileSprite(this.game.LBOUNDX,this.game.LBOUNDY,1366,768, 'background');
+      
       this.world.setBounds(0, 0, 1024, 768);
 
-      var text = this.add.text(this.game.width * 0.5, this.game.height * 0.5,
-         'You dead, score: ' + this.score , {font: '72px Arial', fill: '#ffffff', align: 'center'
+      var text = this.add.text(270, 200,
+         'You died :( ' , {font: '72px Arial', fill: '#ffffff', align: 'center'
       });
-      text.anchor.set(0.5);
+      text.font ='Revalia';
+      var text2 = this.add.text(270, 300,
+         'Score: ' + this.score , {font: '72px Arial', fill: '#ffffff', align: 'center'
+      });
+      text2.font ='Revalia';
       this.input.onDown.add(this.onDown, this);
       var that = this
       setTimeout(function() {

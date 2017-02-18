@@ -11,7 +11,7 @@
       });
 
       this.add.text(this.game.width * 0.05, 700,
-        'Push B to go back, push R to (Re)start game', {font: '32px Revalia', fill: '#ffffff', align: 'center'
+        'Push B to go back, Push R to (Re)start game', {font: '32px Revalia', fill: '#ffffff', align: 'center'
       });
 
       var textYPos = 120

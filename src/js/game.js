@@ -95,20 +95,20 @@
         this.game.time.events.loop(Phaser.Timer.SECOND, this.spawnPakoraTimed, this);
 
         this.powerUpCount = 0;
-        for(var i =0; i < 50; i++){
+        for(var i =0; i < 25; i++){
           this.spawnPowerUp();
         }
         this.game.time.events.loop(Phaser.Timer.SECOND * 4, this.spawnPowerUpTimed, this);
         this.danPsychPowerUpCount = 0;
-        for(var i = 0; i < 50; i++){
+        for(var i = 0; i < 10; i++){
           this.spawnPowerUpPsych();
         }
         this.lifePickupCount =0;
-        for(var i=0; i < 50; i++){
+        for(var i=0; i < 25; i++){
           this.spawnLifePickup();
         }
         this.scrangleHerbCount  = 0;
-        for(var i=0; i< 50; i++){
+        for(var i=0; i< 25; i++){
           this.spawnScrangleHerb();
         }
         this.cursors = this.game.input.keyboard.createCursorKeys();
