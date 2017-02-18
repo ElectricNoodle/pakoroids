@@ -20,9 +20,9 @@
         this.game.physics.p2.friction = 0;
         this.game.physics.p2.restitution = 0;
 
-        this.game.world.setBounds(this.game.LBOUNDX,this.game.LBOUNDY,this.game.UBOUNDX,this.game.UBOUNDY);
+        this.world.setBounds(this.game.LBOUNDX,this.game.LBOUNDY,this.game.UBOUNDX,this.game.UBOUNDY);
         this.background = this.game.add.tileSprite(this.game.LBOUNDX,this.game.LBOUNDY,this.game.UBOUNDX,this.game.UBOUNDY, 'background');
-        
+
         this.players = this.game.add.group();
         this.robsLarge = this.game.add.group();
         this.rickysLarge = this.game.add.group();
@@ -88,7 +88,7 @@
           this.spawnPowerUp();
         }
         this.game.time.events.loop(Phaser.Timer.SECOND * 4, this.spawnPowerUpTimed, this);
-        
+
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
@@ -114,7 +114,7 @@
         this.bullets.enableBody = true;
         this.bullets.physicsBodyType = Phaser.Physics.P2JS;
 
-        
+
         //  All 40 of them
         this.bullets.createMultiple(40, 'bullet');
         this.bullets.setAll('anchor.x', 0.1);
@@ -150,8 +150,6 @@
         this.scoreText.fixedToCamera = true;
 
         //this.game.physics.p2.updateBoundsCollisionGroup();
-
-
       },
 
     update: function () {
@@ -208,7 +206,7 @@
         case 2:
           var asteroid = this.rickysLarge.create(this.game.rnd.integerInRange(this.game.LBOUNDX, this.game.UBOUNDX),
                                               this.game.rnd.integerInRange(this.game.LBOUNDY,this.game.UBOUNDY), 'rickypaklarge');
-          break;        
+          break;
       }
       asteroid.body.setCollisionGroup(this.pakoraCollisionGroup);
       asteroid.body.collides([this.pakoraCollisionGroup])
@@ -260,8 +258,8 @@
       trail.minParticleSpeed = new Phaser.Point(-200,-50);
       trail.emitParticle();
       */
-  
-  
+
+
     },
     fireBullet: function () {
 
@@ -287,7 +285,7 @@
       if(this.lives < 0){
         this.lives = 0;
       }
-      
+
       switch(this.lives){
         case 0:
           this.livesTexture1.visible = false;
@@ -347,9 +345,10 @@
         }
           if(that.lives == 0){
               //that.game.physics.startSystem(Phaser.Physics.P2JS);
-              //that.game.state.start('menu');
               console.log("SHOULD DIE HERE");
-              
+              that.game.state.start('gameover');
+
+
           }else{
             that.lives--;
           }
@@ -357,10 +356,10 @@
     handlePowerUpCollision: function(body1,body2){
       console.log("WOO");
       body1.sprite.destroy();
-    },    
+    },
 
 
-    moveBullets: function (bullet) { 
+    moveBullets: function (bullet) {
       var speed = 0;
       switch (bullet.width){
         case 128:
@@ -382,7 +381,7 @@
       if (typeof speed === 'undefined') { speed = 60; }
       var angle = Math.atan2(obj2.y - obj1.y, obj2.x - obj1.x);
       obj1.body.rotation = angle + this.game.math.degToRad(90);  // correct angle of angry this.bullets (depends on the sprite used)
-      obj1.body.force.x = Math.cos(angle) * speed;    // accelerateToObject 
+      obj1.body.force.x = Math.cos(angle) * speed;    // accelerateToObject
       obj1.body.force.y = Math.sin(angle) * speed;
     },
   };
