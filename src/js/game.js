@@ -243,21 +243,23 @@
                                      this.game.rnd.integerInRange(this.game.LBOUNDY, this.game.UBOUNDY),'dandip');
       dan.body.setCollisionGroup(this.powerUpCollisionGroup);
       dan.body.collides(this.playerCollisionGroup,this.handlePowerUpCollision);
-      dan.body.force.x = this.game.rnd.integerInRange(200,500);
-      dan.body.force.y = this.game.rnd.integerInRange(200,500);
+      dan.body.force.x = this.game.rnd.integerInRange(-10000,-10000);
+      dan.body.force.y = this.game.rnd.integerInRange(1000,5000);
       this.game.physics.p2.enable(dan,true);
       this.powerUpCount++;
-      /**
-      var trail = this.game.add.emitter(0, 0, 1000);
-      trail.makeParticles('dandip');
-      dan.addChild(trail);
-      trail.y = 0;
-      trail.x = -16;
-      trail.lifespan = 500;
-      trail.maxParticleSpeed = new Phaser.Point(-100,50);
-      trail.minParticleSpeed = new Phaser.Point(-200,-50);
-      trail.emitParticle();
-      */
+
+      var emitter = this.game.add.emitter(0, 0, 100);
+      emitter.makeParticles('dandip');
+      dan.addChild(emitter);
+      emitter.minParticleSpeed.setTo(-300, -300);
+      emitter.maxParticleSpeed.setTo(300, 300);
+      emitter.setAlpha(0, 0.7, -0.1)
+      emitter.minParticleScale = 0.1;
+      emitter.maxParticleScale = 0.6;
+      emitter.gravity = 0;
+      emitter.flow(300, 66, 1, -1);
+      emitter.emitParticle();
+
 
 
     },
