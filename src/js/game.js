@@ -394,9 +394,13 @@
     handlePowerUpCollision: function(body1,body2){
       body1.sprite.destroy();
       that.have_dan_powerup = true;
-      setTimeout(function(){
+      if (that.danPowerUpTimer){
+        that.game.time.events.remove(that.danPowerUpTimer)
+      }
+      that.danPowerUpTimer = that.game.time.events.add(Phaser.Timer.SECOND * 30, function(){
         that.have_dan_powerup = false;
-      },30000);
+      }, that);
+
     },
     startPowerUp: function (){
 
