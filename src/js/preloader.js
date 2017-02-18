@@ -22,6 +22,7 @@
       this.load.image('craigsammedium', 'assets/images/pakora/medium/craig-samosa.png');
       this.load.image('craigsamsmall', 'assets/images/pakora/small/craig-samosa.png');
       this.load.image('dandip', 'assets/images/pakora/dan-dip-small.png');
+      this.load.image('danpsych', 'assets/images/pakora/dan-dip-small-psych.png');
       this.load.image('scrangleherb', 'assets/images/pakora/small/scrangle-leaf_360.png');
 
       this.load.image('life', 'assets/images/gui/life.png');
