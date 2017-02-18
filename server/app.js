@@ -12,7 +12,7 @@ var scores
 var users
 
 function loadUsers (cb) {
-  fs.readFile(USERS_FILE, function (usersFile) {
+  fs.readFile(USERS_FILE, function (err, usersFile) {
     try {
       var usersLoaded = JSON.parse(usersFile)
       users = usersLoaded
@@ -27,18 +27,18 @@ function loadUsers (cb) {
 function saveUsers (cb) {
   fs.writeFile(USERS_FILE, JSON.stringify(users), function () {
     console.log('Saved users file')
-    users = []
     cb()
   })
 }
 
 function loadScores (cb) {
-  fs.readFile(HIGH_SCORES_FILE, function (scoresFile) {
+  fs.readFile(HIGH_SCORES_FILE, function (err, scoresFile) {
     try {
       var scoresLoaded = JSON.parse(scoresFile)
       scores = scoresLoaded
     } catch (e) {
       console.log('Error loading score file')
+      scores = []
     }
     cb()
   })
@@ -47,9 +47,9 @@ function loadScores (cb) {
 function reformatScores() {
   scores.sort(function (a, b) {
     if (a.score < b.score) {
-      return -1
-    } else if (a.score > b.score) {
       return 1
+    } else if (a.score > b.score) {
+      return -1
     } else {
       return 0
     }
@@ -69,21 +69,27 @@ app.use(express.static(__dirname + '/../src'))
 app.use(require('connect-livereload')())
 
 io.on('connection', function (socket) {
-  socket.emit('connected', {client_id: crypto.randomBytes(10).toString('base64')})
+  socket.emit('connected', crypto.randomBytes(10).toString('base64'))
 
   socket.on('register', function (token, username) {
     if (users[username] === undefined) {
       users[username] = token
       socket.emit('register-success')
+      console.log('New user '+ username + ' registered')
     } else {
       socket.emit('register-error')
     }
+    saveUsers(function() {
+
+    })
   })
 
   socket.on('relay', function (username, token, score) {
+    console.log(users[username], token)
     if (users[username] === token) {
       scores.push({username: username, score: score})
     }
+
 
     reformatScores()
 
@@ -93,7 +99,7 @@ io.on('connection', function (socket) {
   })
 
   socket.on('get-scores', function () {
-    socket.emit('scores', JSON.stringify(scores))
+    socket.emit('scores', scores)
   })
 })
 
