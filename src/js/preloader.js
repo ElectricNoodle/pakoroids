@@ -37,6 +37,8 @@
       this.load.image('space_bar', 'assets/images/gui/space.png');
       this.load.audio('splat', 'assets/sounds/splat.wav');
       this.load.audio('life_pickup', 'assets/sounds/life_pickup.wav');
+      this.load.audio('lose_life', 'assets/sounds/lose_life.wav');
+      this.load.audio('pakora_bang', 'assets/sounds/pakora_bang.wav');
 
       // this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
       // this.loadResources();

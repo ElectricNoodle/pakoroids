@@ -217,9 +217,17 @@
         this.splatSound.allowMultiple = true;
         this.splatSound.addMarker('splat', 0, 0.5);
 
+        this.loseLifeSound = this.add.audio('lose_life');
+        this.loseLifeSound.allowMultiple = true;
+        this.loseLifeSound.addMarker('lose_life',0,1);
+
         this.lifePickupSound = this.add.audio('life_pickup');
         this.lifePickupSound.allowMultiple = true;
         this.lifePickupSound.addMarker('life_pickup', 0,2);
+
+        this.pakoraBang = this.add.audio('pakora_bang');
+        this.pakoraBang.allowMultiple = true;
+        this.pakoraBang.addMarker('pakora_bang',0,1);
       },
 
     update: function () {
@@ -551,6 +559,7 @@
       that.scoreText.setText('Score: ' + that.score);
 
       body1.sprite.destroy();
+      that.pakoraBang.play('pakora_bang');
       that.pakoraCount--;
 
     },
@@ -565,6 +574,7 @@
 
           }else{
             if(!that.just_hit){
+              that.loseLifeSound.play('lose_life');
               that.lives--;
               that.just_hit = true;
               setTimeout(function(){
