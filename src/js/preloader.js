@@ -36,6 +36,7 @@
       this.load.image('arrows', 'assets/images/gui/keys.png');
       this.load.image('space_bar', 'assets/images/gui/space.png');
       this.load.audio('splat', 'assets/sounds/splat.wav');
+      this.load.audio('life_pickup', 'assets/sounds/life_pickup.wav');
 
       // this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
       // this.loadResources();

@@ -215,9 +215,11 @@
 
         this.splatSound = this.add.audio('splat');
         this.splatSound.allowMultiple = true;
-        
         this.splatSound.addMarker('splat', 0, 0.5);
-        //this.game.physics.p2.updateBoundsCollisionGroup();
+
+        this.lifePickupSound = this.add.audio('life_pickup');
+        this.lifePickupSound.allowMultiple = true;
+        this.lifePickupSound.addMarker('life_pickup', 0,2);
       },
 
     update: function () {
@@ -602,6 +604,7 @@
     },
     handleLifePickupCollision: function(body1,body2){
       body1.sprite.destroy();
+      that.lifePickupSound.play('life_pickup');
       that.lifePickupCount--;
       if(that.lives < 5){
         that.lives++;
