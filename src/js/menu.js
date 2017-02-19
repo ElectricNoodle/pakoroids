@@ -23,6 +23,11 @@
       });
       scores_text.font = 'Revalia';
       text.anchor.set(0.5);
+
+      this.buttonNoise = this.add.audio('button');
+      this.buttonNoise.allowMultiple = true;
+      this.buttonNoise.addMarker('button',0,1);
+
       this.input.onDown.add(this.onDown, this);
 
       var socket = io('http://localhost:9000');
@@ -38,12 +43,16 @@
 
     update: function () {
       if(this.game.input.keyboard.isDown(Phaser.Keyboard.C)){
+        this.buttonNoise.play('button');
         this.game.state.start('controls');
       }else if(this.game.input.keyboard.isDown(Phaser.Keyboard.S)){
+        this.buttonNoise.play('button');
         this.game.state.start('game');
       }else if(this.game.input.keyboard.isDown(Phaser.Keyboard.H)){
+        this.buttonNoise.play('button');
         this.game.state.start('highscore');
       }else if(this.game.input.keyboard.isDown(Phaser.Keyboard.G)){
+        this.buttonNoise.play('button');
         this.game.state.start('gameover');
       }
     },

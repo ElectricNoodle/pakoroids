@@ -13,7 +13,9 @@
       this.add.text(this.game.width * 0.05, 700,
         'Push B to go back, Push R to (Re)start game', {font: '32px Revalia', fill: '#ffffff', align: 'center'
       });
-
+      this.buttonNoise = this.add.audio('button');
+      this.buttonNoise.allowMultiple = true;
+      this.buttonNoise.addMarker('button',0,1);
       var textYPos = 120
 
       for (var i = 0; i < window.scores.length; i++) {
@@ -27,8 +29,10 @@
 
     update: function () {
       if(this.game.input.keyboard.isDown(Phaser.Keyboard.B)){
+        this.buttonNoise.play('button');
         this.game.state.start('menu');
       }else if(this.game.input.keyboard.isDown(Phaser.Keyboard.R)){
+        this.buttonNoise.play('button');
         this.game.state.start('game');
       }
     },

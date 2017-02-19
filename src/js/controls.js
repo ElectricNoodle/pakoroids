@@ -12,7 +12,11 @@
       var font = 'Revalia';
       text.font = font;
       text.anchor.set(0.5);
-      
+
+      this.buttonNoise = this.add.audio('button');
+      this.buttonNoise.allowMultiple = true;
+      this.buttonNoise.addMarker('button',0,1);
+
       var arrow_text = this.add.text(600, 290,
        "to move.",{font: '30px Arial', fill: '#ffffff', align: 'center'
       });
@@ -30,6 +34,7 @@
 
     update: function () {
       if(this.game.input.keyboard.isDown(Phaser.Keyboard.B)){
+        this.buttonNoise.play('button');
         this.game.state.start('menu');
       }
     },

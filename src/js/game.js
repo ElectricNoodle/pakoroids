@@ -228,6 +228,10 @@
         this.pakoraBang = this.add.audio('pakora_bang');
         this.pakoraBang.allowMultiple = true;
         this.pakoraBang.addMarker('pakora_bang',0,1);
+
+        this.buttonNoise = this.add.audio('button');
+        this.buttonNoise.allowMultiple = true;
+        this.buttonNoise.addMarker('button',0,1);
       },
 
     update: function () {

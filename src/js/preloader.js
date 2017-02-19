@@ -39,7 +39,7 @@
       this.load.audio('life_pickup', 'assets/sounds/life_pickup.wav');
       this.load.audio('lose_life', 'assets/sounds/lose_life.wav');
       this.load.audio('pakora_bang', 'assets/sounds/pakora_bang.wav');
-
+      this.load.audio('button', 'assets/sounds/button.wav');
       // this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
       // this.loadResources();
          //  Load the Google WebFont Loader script
