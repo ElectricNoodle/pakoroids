@@ -5,7 +5,7 @@
 
   Controls.prototype = {
     create: function () {
-      this.background = this.game.add.tileSprite(this.game.LBOUNDX,this.game.LBOUNDY,1366,768, 'background');
+      this.background = this.game.add.tileSprite(0, 0,1366,768, 'background');
       var text = this.add.text(this.game.width * 0.5, 70,
         "Controls", {font: '72px Arial', fill: '#ffffff', align: 'center'
       });
