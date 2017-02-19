@@ -96,6 +96,7 @@
         };
         this.game.time.events.loop(Phaser.Timer.SECOND, this.spawnPakoraTimed, this);
 
+
         this.powerUpCount = 0;
         for(var i =0; i < 25; i++){
           this.spawnPowerUp();
@@ -207,10 +208,15 @@
         this.score = 0;
         this.rotationSpeed = 100;
         this.moveSpeed = 400;
-        this.scoreText = this.game.add.text( 20, 40, 'Score: ' + this.score, { font: '16px Arial', fill: '#ffffff' } );
+        this.scoreText = this.add.text( 20, 40, 'Score: ' + this.score, { font: '16px Arial', fill: '#ffffff' } );
         this.scoreText.font = 'Revalia';
         this.scoreText.fixedToCamera = true;
 
+
+        this.splatSound = this.add.audio('splat');
+        this.splatSound.allowMultiple = true;
+        
+        this.splatSound.addMarker('splat', 0, 0.5);
         //this.game.physics.p2.updateBoundsCollisionGroup();
       },
 
@@ -245,7 +251,12 @@
       if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
         this.fireBullet();
       }
-
+      if(this.just_hit){
+       // console.dir(this.ship);
+        this.ship.texture.visible = false;
+      }else{
+        this.ship.texture.visible = true;
+      }
 
       this.game.world.wrap(this.ship);
       this.game.world.wrap(this.ship.body);
@@ -282,6 +293,8 @@
       asteroid.body.pakoraType = "large";
 
       this.game.physics.p2.enable(asteroid, false);
+      asteroid.body.force.x = this.game.rnd.integerInRange(10000,50000);
+      asteroid.body.force.y = this.game.rnd.integerInRange(10000,50000);
       this.pakoraCount++;
     },
 
@@ -410,6 +423,7 @@
               bulletOne.rotation = this.ship.rotation;
               bulletOne.body.force.x = Math.cos(this.ship.rotation-1.581)*50000;
               bulletOne.body.force.y = Math.sin(this.ship.rotation-1.581)*50000;
+              this.splatSound.play('splat');
           }
           var bulletTwo = this.bullets.getFirstExists(false);
           if(bulletTwo){
@@ -419,7 +433,7 @@
 
               bulletTwo.body.force.x = Math.cos(this.ship.rotation-1.581+0.2)*50000;
               bulletTwo.body.force.y = Math.sin(this.ship.rotation-1.581+0.2)*50000;
-
+              this.splatSound.play('splat');
           }
           var bulletThree = this.bullets.getFirstExists(false);
           if(bulletThree){
@@ -429,7 +443,7 @@
 
               bulletThree.body.force.x = Math.cos(this.ship.rotation-1.581-0.2)*50000;
               bulletThree.body.force.y = Math.sin(this.ship.rotation-1.581-0.2)*50000;
-
+              this.splatSound.play('splat');
           }
            this.bulletTime = this.game.time.now + 200;
         }else{
@@ -438,10 +452,11 @@
           if (bullet)
           {
               bullet.reset(this.ship.body.x-(Math.sin(this.ship.rotation)*(-40)), this.ship.body.y+(Math.sin(this.ship.rotation+1.581)*(-40)));
-              bullet.lifespan = 2000;
+              bullet.lifespan = 1000;
               bullet.rotation = this.ship.rotation;
               bullet.body.force.x = Math.cos(this.ship.rotation-1.581)*50000;
               bullet.body.force.y = Math.sin(this.ship.rotation-1.581)*50000;
+              this.splatSound.play('splat');
               this.bulletTime = this.game.time.now + 200;
           }
         }
@@ -542,12 +557,18 @@
           that.lives = 0;
         }
           if(that.lives == 0){
-              console.log("SHOULD DIE HERE");
+              
               that.game.state.start('gameover', true, false, that.score);
 
 
           }else{
-            that.lives--;
+            if(!that.just_hit){
+              that.lives--;
+              that.just_hit = true;
+              setTimeout(function(){
+                that.just_hit = false;
+              },3000);
+            }
           }
     },
     handlePowerUpCollision: function(body1,body2){
@@ -562,7 +583,6 @@
         that.have_dan_powerup = false;
         that.danDipActiveTexture.visible = false;
       }, that);
-
     },
     handlePsychDanCollision: function(body1,body2){
       body1.sprite.destroy();
