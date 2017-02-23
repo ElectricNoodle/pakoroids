@@ -16,17 +16,29 @@ void main( void ) {
     vec2 centToFrag = uv - center;//vector from center to current fragment
     float r = sqrt(dot(centToFrag, centToFrag));
 
-    vec2 realCoordOffs;
+    vec2 realCoordOffsR;
+
+    realCoordOffsR.x = ((0.3 * (vTextureCoord.x * vTextureCoord.x) * sin(amplitude)*0.3 - cos(amplitude)*0.13) + 0.14 +  0.7 * vTextureCoord.x);
+    realCoordOffsR.y = ((0.3 * (vTextureCoord.y * vTextureCoord.y) * cos(amplitude)*0.3 - sin(amplitude)*0.15) + 0.1 + 0.7 * vTextureCoord.y);
+
+    vec2 realCoordOffsG;
+
+    realCoordOffsG.x = ((0.3 * (vTextureCoord.x * vTextureCoord.x) * sin(amplitude)*0.2 - cos(amplitude)*0.13) + 0.14 +  0.7 * vTextureCoord.x);
+    realCoordOffsG.y = ((0.3 * (vTextureCoord.y * vTextureCoord.y) * cos(amplitude)*0.5 - sin(amplitude)*0.15) + 0.1 + 0.7 * vTextureCoord.y);
+
+    vec2 realCoordOffsB;
+
+    realCoordOffsB.x = ((0.3 * (vTextureCoord.x * vTextureCoord.x) * sin(amplitude)*0.1 - cos(amplitude)*0.13) + 0.14 +  0.7 * vTextureCoord.x);
+    realCoordOffsB.y = ((0.3 * (vTextureCoord.y * vTextureCoord.y) * cos(amplitude)*0.4 - sin(amplitude)*0.15) + 0.1 + 0.7 * vTextureCoord.y);
 
 
+    vec4 colorR = texture2D(uSampler, realCoordOffsR);
+    vec4 colorG = texture2D(uSampler, realCoordOffsB);
+    vec4 colorB = texture2D(uSampler, realCoordOffsG);
 
-    realCoordOffs.x = ((0.3 * (vTextureCoord.x * vTextureCoord.x) * sin(amplitude)*0.3 - cos(amplitude)*0.13) + 0.14 +  0.7 * vTextureCoord.x);
-    realCoordOffs.y = ((0.3 * (vTextureCoord.y * vTextureCoord.y) * cos(amplitude)*0.3 - sin(amplitude)*0.15) + 0.1 + 0.7 * vTextureCoord.y);
+    colorR.r = colorR.r * sin(time * 10.0);
+    colorR.g = colorG.g * sin((time * 10.0) + 1.57);
+    colorR.b = colorB.b * sin((time * 10.0) + 0.7);
 
-    vec4 color = texture2D(uSampler, realCoordOffs);
-    color[0] = color.r *  sin(time * 10.0);
-    color[1] = color.g * cos(time * 10.0);
-    color[2] = color.b * sin(time * 10.0);
-
-    gl_FragColor = color;
+    gl_FragColor = colorR;
 }
