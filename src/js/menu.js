@@ -24,6 +24,10 @@
       scores_text.font = 'Revalia';
       text.anchor.set(0.5);
 
+      this.pakoroidsNoise = this.add.audio('pakoroids');
+      this.pakoroidsNoise.allowMultiple = false;
+      this.pakoroidsNoise.play()
+
       this.buttonNoise = this.add.audio('button');
       this.buttonNoise.allowMultiple = true;
       this.buttonNoise.addMarker('button',0,1);
