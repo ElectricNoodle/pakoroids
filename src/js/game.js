@@ -152,8 +152,7 @@
 
         this.ship = this.players.create(this.game.world.centerX, this.game.world.centerY, 'andy');
         this.ship.body.setCollisionGroup(this.playerCollisionGroup);
-        this.ship.body.collides([this.playerCollisionGroup, this.pakoraCollisionGroup,this.powerUpCollisionGroup,this.andyLifeCollisionGroup,this.scrangleHerbCollisionGroup,this.psychedelicDanCollisonGroup]);
-
+        this.ship.body.collides([this.playerCollisionGroup, this.pakoraCollisionGroup,this.powerUpCollisionGroup,this.andyLifeCollisionGroup,this.scrangleHerbCollisionGroup,this.psychedelicDanCollisonGroup,this.petePickleCollisionGroup]);
         this.game.physics.p2.enable(this.ship);
         this.ship.body.collidesWorldBounds = false;
 
@@ -310,6 +309,9 @@
         this.ship.texture.visible = false;
       }else{
         this.ship.texture.visible = true;
+      }
+      if(this.have_pete_pickle){
+
       }
 
       this.game.world.wrap(this.ship);
@@ -476,6 +478,7 @@
         pete.body.force.y = this.game.rnd.integerInRange(200,900);
         pete.body.mass = 1;
         this.game.physics.p2.enable(pete,true);
+
         var emitter = this.game.add.emitter(0, 0, 50);
         emitter.makeParticles('pete_gerkin_pickup');
         this.petePickleCount++;
@@ -558,6 +561,7 @@
           this.livesTexture3.visible = false;
           this.livesTexture4.visible = false;
           this.livesTexture5.visible = false;
+
           break;
         case 1:
           this.livesTexture1.visible = true;
@@ -643,7 +647,7 @@
 
 
           }else{
-            if(!that.just_hit){
+            if(!that.just_hit && !that.have_pete_pickle){
               that.loseLifeSound.play('lose_life');
               that.lives--;
               that.just_hit = true;
@@ -706,8 +710,8 @@
       }, that);
     },
     handlePetePickleCollision : function(body1,body2){
-      console.log("IM A PETE COLLISION");
       body1.sprite.destroy();
+      that.ship.loadTexture('andy_beard');
       that.petePickleCount--;
       that.have_pete_pickle = true;
       that.petePickleActiveTexture.visible = true;
@@ -715,6 +719,7 @@
       that.game.time.events.add(Phaser.Timer.SECOND * 30, function(){
         that.have_pete_pickle = false;
         that.petePickleActiveTexture.visible = false;
+        that.ship.loadTexture('andy');
       }, that);
     },
     startPowerUp: function (){

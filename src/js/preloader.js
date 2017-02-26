@@ -12,6 +12,7 @@
       this.load.setPreloadSprite(this.asset);
 
       this.load.image('andy', 'assets/images/pakora/small/andy-crinkle-cut-chip.png');
+      this.load.image('andy_beard', 'assets/images/pakora/small/andy-crinkle-cut-chip-beard.png');
       this.load.image('andy_lemon', 'assets/images/pakora/small/andrew-lemon-wedge.png');
 
       this.load.image('robpaklarge', 'assets/images/pakora/big/rob-pakosha_360.png');
