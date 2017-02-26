@@ -33,8 +33,8 @@
       this.load.image('dandip', 'assets/images/pakora/dan-dip-small.png');
       this.load.image('danpsych', 'assets/images/pakora/dan-dip-small-psych.png');
       this.load.image('scrangleherb', 'assets/images/pakora/small/scrangle-leaf_360.png');
-      this.load.image('pete_gerkin_pickup', 'assets/images/pakora/Pete-Gerkin.png');
-      this.load.image('pete_beard','assets/images/pakora/Pete-Gerkin-Beard.png');
+      this.load.image('pete_gerkin_pickup', 'assets/images/pakora/Pete-Gerkin-Small.png');
+      this.load.image('pete_beard','assets/images/pakora/Pete-Gerkin-Beard-Small.png');
 
       this.load.image('life', 'assets/images/gui/life.png');
 

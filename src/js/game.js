@@ -84,6 +84,10 @@
         this.scrangleHerb.enableBody = true;
         this.scrangleHerb.physicsBodyType = Phaser.Physics.P2JS;
 
+        this.petePickle = this.game.add.group();
+        this.petePickle.enableBody = true;
+        this.petePickle.physicsBodyType = Phaser.Physics.P2JS;
+
         this.playerCollisionGroup = this.game.physics.p2.createCollisionGroup();
         this.pakoraCollisionGroup = this.game.physics.p2.createCollisionGroup();
         this.bulletCollisionGroup = this.game.physics.p2.createCollisionGroup();
@@ -91,6 +95,8 @@
         this.andyLifeCollisionGroup = this.game.physics.p2.createCollisionGroup();
         this.scrangleHerbCollisionGroup = this.game.physics.p2.createCollisionGroup();
         this.psychedelicDanCollisonGroup = this.game.physics.p2.createCollisionGroup();
+        this.petePickleCollisionGroup = this.game.physics.p2.createCollisionGroup();
+
 
         this.pakoraDegradationMap = {
           "robpaklarge": "robpakmedium",
@@ -131,6 +137,10 @@
         this.scrangleHerbCount  = 0;
         for(var i=0; i< 25; i++){
           this.spawnScrangleHerb();
+        }
+        this.petePickleCount = 0;
+        for(var i =0; i <10; i++){
+          this.spawnPetePickle();
         }
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
@@ -202,7 +212,7 @@
         this.livesTexture4.fixedToCamera = true;
         this.livesTexture5.fixedToCamera = true;
 
-        this.powerUpText = this.game.add.text(this.game.width- 405, 40, 'Powerups: ',{ font: '16px Arial', fill: '#ffffff' } );
+        this.powerUpText = this.game.add.text(this.game.width- 445, 40, 'Powerups: ',{ font: '16px Arial', fill: '#ffffff' } );
         this.powerUpText.fixedToCamera = true;
         this.powerUpText.font= 'Revalia';
 
@@ -218,15 +228,26 @@
         this.psychDanDipActiveTexture.scale.x =0.5;
         this.psychDanDipActiveTexture.scale.y =0.5;
 
+        this.petePickleActiveTexture = this.game.add.sprite(this.game.width - 332, 38,'pete_gerkin_pickup');
+        this.petePickleActiveTexture.scale.x =0.6;
+        this.petePickleActiveTexture.scale.y =0.6;
+
         this.scrangleActiveTexture.fixedToCamera = true;
         this.scrangleActiveTexture.visible = false;
+
         this.danDipActiveTexture.visible = false;
         this.danDipActiveTexture.fixedToCamera = true;
+
         this.psychDanDipActiveTexture.visible = false;
         this.psychDanDipActiveTexture.fixedToCamera = true;
 
+        this.petePickleActiveTexture.fixedToCamera = true;
+        this.petePickleActiveTexture.visible = false;
+
+
         this.have_dan_powerup = false;
         this.have_scrangle_herb = false;
+        this.have_pete_pickle = false;
         this.score = 0;
         this.rotationSpeed = 100;
         this.moveSpeed = 400;
@@ -446,6 +467,28 @@
       emitter.flow(300, 66, 1, -1);
       emitter.emitParticle();
     },
+    spawnPetePickle: function(){
+      var pete = this.petePickle.create(this.game.rnd.integerInRange(this.game.LBOUNDX, this.game.UBOUNDX),
+                                     this.game.rnd.integerInRange(this.game.LBOUNDY, this.game.UBOUNDY),'pete_gerkin_pickup');
+        pete.body.setCollisionGroup(this.petePickleCollisionGroup);
+        pete.body.collides(this.playerCollisionGroup,this.handlePetePickleCollision);
+        pete.body.force.x = this.game.rnd.integerInRange(200,900);
+        pete.body.force.y = this.game.rnd.integerInRange(200,900);
+        pete.body.mass = 1;
+        this.game.physics.p2.enable(pete,true);
+        var emitter = this.game.add.emitter(0, 0, 50);
+        emitter.makeParticles('pete_gerkin_pickup');
+        this.petePickleCount++;
+        pete.addChild(emitter);
+        emitter.minParticleSpeed.setTo(-300, -300);
+        emitter.maxParticleSpeed.setTo(300, 300);
+        emitter.setAlpha(0, 0.7, -0.1)
+        emitter.minParticleScale = 0.1;
+        emitter.maxParticleScale = 0.6;
+        emitter.gravity = 0;
+        emitter.flow(300, 66, 1, -1);
+        emitter.emitParticle();
+    },
     fireBullet: function () {
 
       if (this.game.time.now > this.bulletTime)
@@ -660,6 +703,18 @@
         that.psychDanDipActiveTexture.visible = false;
         that.rotationSpeed -= 100;
         that.moveSpeed -= 800;
+      }, that);
+    },
+    handlePetePickleCollision : function(body1,body2){
+      console.log("IM A PETE COLLISION");
+      body1.sprite.destroy();
+      that.petePickleCount--;
+      that.have_pete_pickle = true;
+      that.petePickleActiveTexture.visible = true;
+
+      that.game.time.events.add(Phaser.Timer.SECOND * 30, function(){
+        that.have_pete_pickle = false;
+        that.petePickleActiveTexture.visible = false;
       }, that);
     },
     startPowerUp: function (){
