@@ -36,6 +36,7 @@
       socket.on('scores', function (scores) {
         window.scores = scores
       })
+
       this.background = this.game.add.tileSprite(0, 0,1366,768, 'background');
 
       this.world.setBounds(0, 0, 1024, 768);

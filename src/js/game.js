@@ -27,32 +27,48 @@
         this.robsLarge = this.game.add.group();
         this.rickysLarge = this.game.add.group();
         this.craigsLarge = this.game.add.group();
+        this.abesLarge = this.game.add.group();
+
         this.robsMedium = this.game.add.group();
         this.rickysMedium = this.game.add.group();
         this.craigsMedium = this.game.add.group();
+        this.abesMedium = this.game.add.group();
+
         this.robsSmall = this.game.add.group();
         this.rickysSmall = this.game.add.group();
         this.craigsSmall = this.game.add.group();
+        this.abesSmall = this.game.add.group();
 
         this.robsLarge.enableBody=true;
         this.rickysLarge.enableBody=true;
         this.craigsLarge.enableBody=true;
+        this.abesLarge.enableBody=true;
+
         this.robsMedium.enableBody=true;
         this.rickysMedium.enableBody=true;
         this.craigsMedium.enableBody=true;
+        this.abesMedium.enableBody=true;
+
+
         this.robsSmall.enableBody=true;
         this.rickysSmall.enableBody=true;
         this.craigsSmall.enableBody=true;
+        this.abesSmall.enableBody = true;
 
         this.robsLarge.physicsBodyType = Phaser.Physics.P2JS;
         this.rickysLarge.physicsBodyType = Phaser.Physics.P2JS;
         this.craigsLarge.physicsBodyType = Phaser.Physics.P2JS;
+        this.abesLarge.physicsBodyType = Phaser.Physics.P2JS;
+
         this.robsMedium.physicsBodyType = Phaser.Physics.P2JS;
         this.rickysMedium.physicsBodyType = Phaser.Physics.P2JS;
         this.craigsMedium.physicsBodyType = Phaser.Physics.P2JS;
+        this.abesMedium.physicsBodyType = Phaser.Physics.P2JS;
+
         this.robsSmall.physicsBodyType = Phaser.Physics.P2JS;
         this.rickysSmall.physicsBodyType = Phaser.Physics.P2JS;
         this.craigsSmall.physicsBodyType = Phaser.Physics.P2JS;
+        this.abesSmall.physicsBodyType = Phaser.Physics.P2JS;
 
         this.danPowerUp = this.game.add.group();
         this.danPowerUp.enableBody = true;
@@ -82,7 +98,9 @@
           "craigsamlarge": "craigsammedium",
           "craigsammedium": "craigsamsmall",
           "rickypaklarge": "rickypakmedium",
-          "rickypakmedium": "rickypaksmall"
+          "rickypakmedium": "rickypaksmall",
+          "abepaklarge" : "abepakmedium",
+          "abepakmedium":"abepaksmall"
         }
 
         this.fisheye = new Phaser.Filter(this, null, this.cache.getShader('fisheye'));
@@ -165,6 +183,10 @@
           this.playerPosText.fixedToCamera = true;
           this.psychText.fixedToCamera = true;
         }
+        this.gui = this.game.add.sprite(0,0,'gui');
+        this.gui.scale.x = 1.6;
+        this.gui.scale.y = 1.6;
+       // this.gui.fixedToCamera =true;
         this.livesText = this.game.add.text( this.game.width - 170, 40, 'Lives: ', { font: '16px Arial', fill: '#ffffff' } );
         this.livesText.fixedToCamera = true;
         this.livesText.font = 'Revalia';
@@ -229,9 +251,6 @@
         this.pakoraBang.allowMultiple = true;
         this.pakoraBang.addMarker('pakora_bang',0,1);
 
-        this.buttonNoise = this.add.audio('button');
-        this.buttonNoise.allowMultiple = true;
-        this.buttonNoise.addMarker('button',0,1);
       },
 
     update: function () {
@@ -285,7 +304,7 @@
       }
     },
     spawnPakora: function() {
-      var pakType = this.game.rnd.integerInRange(0, 2);
+      var pakType = this.game.rnd.integerInRange(0, 3);
       switch (pakType){
         case 0:
           var asteroid = this.robsLarge.create(this.game.rnd.integerInRange(this.game.LBOUNDX, this.game.UBOUNDX),
@@ -298,6 +317,10 @@
         case 2:
           var asteroid = this.rickysLarge.create(this.game.rnd.integerInRange(this.game.LBOUNDX, this.game.UBOUNDX),
                                               this.game.rnd.integerInRange(this.game.LBOUNDY,this.game.UBOUNDY), 'rickypaklarge');
+          break;
+        case 3:
+          var asteroid = this.abesLarge.create(this.game.rnd.integerInRange(this.game.LBOUNDX, this.game.UBOUNDX),
+                                              this.game.rnd.integerInRange(this.game.LBOUNDY,this.game.UBOUNDY), 'abepaklarge');
           break;
       }
       asteroid.body.setCollisionGroup(this.pakoraCollisionGroup);
