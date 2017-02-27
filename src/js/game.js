@@ -139,7 +139,7 @@
           this.spawnScrangleHerb();
         }
         this.petePickleCount = 0;
-        for(var i =0; i <10; i++){
+        for(var i =0; i <15; i++){
           this.spawnPetePickle();
         }
         this.cursors = this.game.input.keyboard.createCursorKeys();
