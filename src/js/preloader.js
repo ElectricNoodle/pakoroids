@@ -49,13 +49,21 @@
 
       this.load.image('arrows', 'assets/images/gui/keys.png');
       this.load.image('space_bar', 'assets/images/gui/space.png');
+
       this.load.audio('splat', 'assets/sounds/splat.wav');
       this.load.audio('life_pickup', 'assets/sounds/life_pickup.wav');
       this.load.audio('lose_life', 'assets/sounds/lose_life.wav');
       this.load.audio('pakora_bang', 'assets/sounds/pakora_bang.wav');
       this.load.audio('button', 'assets/sounds/button.wav');
       this.load.audio('pakoroids', 'assets/sounds/pakoroids.wav');
-      this.load.audio('power_up', 'assets/sounds/power_up.wav');
+      this.load.audio('pete_power_up_noise', 'assets/sounds/power_up.wav');
+      this.load.audio('dan_dip_noise', 'assets/sounds/dan_yass_normal.wav');
+      this.load.audio('dan_dip_psych_noise','assets/sounds/dan_yass_psych.wav');
+      this.load.audio('scrangle_noise','assets/sounds/scrangle_powerup.wav');
+      this.load.audio('dan_dip_psych_noise_out','assets/sounds/dan_yass_psych_out.wav');
+
+      this.load.audio('menu_music','assets/sounds/menu_music.wav');
+      this.load.audio('game_music','assets/sounds/the_ballad_of_andy_chip.mp3');
       // this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
       // this.loadResources();
          //  Load the Google WebFont Loader script

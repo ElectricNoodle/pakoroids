@@ -43,6 +43,9 @@
         window.scores = scores
         socket.close()
       })
+
+      this.menuMusic = this.add.audio('menu_music');
+      this.menuMusic.loopFull(0.8);
     },
 
     update: function () {
@@ -63,6 +66,9 @@
 
     onDown: function () {
     },
+    shutdown: function () {
+      this.menuMusic.stop()
+    }
 
   };
 

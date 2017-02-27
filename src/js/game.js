@@ -6,7 +6,7 @@
   Game.prototype = {
       create: function () {
         that = this;
-        this.DEBUG = true;
+        this.DEBUG = false;
         this.game.LBOUNDX = -10000;
         this.game.LBOUNDY = -10000;
         this.game.UBOUNDX = 10000;
@@ -271,6 +271,29 @@
         this.pakoraBang.allowMultiple = true;
         this.pakoraBang.addMarker('pakora_bang',0,1);
 
+        this.petePickupSound = this.add.audio('pete_power_up_noise');
+        this.petePickupSound.allowMultiple = true;
+        this.petePickupSound.addMarker('pete_power_up_noise',0,3);
+
+        this.danDipSound = this.add.audio('dan_dip_noise');
+        this.danDipSound.allowMultiple = true;
+        this.danDipSound.addMarker('dan_dip_noise',0,3);
+
+        this.danDipPsychSound = this.add.audio('dan_dip_psych_noise');
+        this.danDipPsychSound.allowMultiple = true;
+        this.danDipPsychSound.addMarker('dan_dip_psych_noise',0,3);
+
+        this.danDipPsychOutSound = this.add.audio('dan_dip_psych_noise_out');
+        this.danDipPsychOutSound.allowMultiple = true;
+        this.danDipPsychOutSound.addMarker('dan_dip_psych_noise_out',0,4);
+
+        this.scrangleHerbSound = this.add.audio('scrangle_noise');
+        this.scrangleHerbSound.allowMultiple = true;
+        this.scrangleHerbSound.addMarker('scrangle_noise',0,3);
+
+        this.gameMusic = this.add.audio('game_music');
+        this.gameMusic.loopFull(1.0);
+
       },
 
     update: function () {
@@ -346,6 +369,7 @@
                                               this.game.rnd.integerInRange(this.game.LBOUNDY,this.game.UBOUNDY), 'abepaklarge');
           break;
       }
+      console.log(asteroid.position);
       asteroid.body.setCollisionGroup(this.pakoraCollisionGroup);
       asteroid.body.collides([this.pakoraCollisionGroup])
       asteroid.body.collides(this.playerCollisionGroup,this.handlePlayerPakoraCollision);
@@ -535,7 +559,7 @@
           if (bullet)
           {
               bullet.reset(this.ship.body.x-(Math.sin(this.ship.rotation)*(-40)), this.ship.body.y+(Math.sin(this.ship.rotation+1.581)*(-40)));
-              bullet.lifespan = 1000;
+              bullet.lifespan = 5000;
               bullet.rotation = this.ship.rotation;
               bullet.body.force.x = Math.cos(this.ship.rotation-1.581)*50000;
               bullet.body.force.y = Math.sin(this.ship.rotation-1.581)*50000;
@@ -546,6 +570,9 @@
 
       }
 
+    },
+    shutdown: function () {
+      this.gameMusic.stop()
     },
 
 
@@ -662,6 +689,7 @@
       that.powerUpCount--;
       that.have_dan_powerup = true;
       that.danDipActiveTexture.visible = true;
+      that.danDipSound.play('dan_dip_noise');
       if (that.danPowerUpTimer){
         that.game.time.events.remove(that.danPowerUpTimer);
       }
@@ -675,11 +703,18 @@
       that.danPsychPowerUpCount--;
       that.have_dan_psych_powerup = true;
       that.psychDanDipActiveTexture.visible = true;
+      that.danDipPsychSound.play('dan_dip_psych_noise');
       that.world.filters = [that.fisheye]
       if (that.danPowerUpTimer){
         that.game.time.events.remove(that.danPsychPowerUpTimer);
+        that.game.time.events.remove(that.danDipPsychOutSound);
       }
+      
+      that.danPsychOutTimer = that.game.time.events.add(Phaser.Timer.SECOND * 26, function(){
+        that.danDipPsychOutSound.play('dan_dip_psych_noise_out');
+      }, that);
       that.danPsychPowerUpTimer = that.game.time.events.add(Phaser.Timer.SECOND * 30, function(){
+
         that.have_dan_psych_powerup = false;
         that.psychDanDipActiveTexture.visible = false;
         that.world.filters = null
@@ -701,7 +736,7 @@
       that.scrangleActiveTexture.visible = true;
       that.rotationSpeed += 100;
       that.moveSpeed += 800;
-
+      that.scrangleHerbSound.play('scrangle_noise');
       that.game.time.events.add(Phaser.Timer.SECOND * 30, function(){
         that.have_scrangle_herb = false;
         that.psychDanDipActiveTexture.visible = false;
@@ -715,7 +750,7 @@
       that.petePickleCount--;
       that.have_pete_pickle = true;
       that.petePickleActiveTexture.visible = true;
-
+      that.petePickupSound.play('pete_power_up_noise');
       that.game.time.events.add(Phaser.Timer.SECOND * 30, function(){
         that.have_pete_pickle = false;
         that.petePickleActiveTexture.visible = false;
